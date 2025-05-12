@@ -27,7 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { togglePasswordVisibility } from "@/lib/utils";
+import { capitalizeWords, togglePasswordVisibility } from "@/lib/utils";
 
 function Register() {
   const [isLoading, setIsLoading] = useState(false);
@@ -98,6 +98,10 @@ function Register() {
                       type="text"
                       placeholder="Nombre(s)"
                       {...field}
+                      onChange={(e) => {
+                        const formatted = capitalizeWords(e.target.value);
+                        field.onChange(formatted);
+                      }}
                     />
                     <FormMessage />
                   </FormItem>
@@ -114,6 +118,10 @@ function Register() {
                       type="text"
                       placeholder="Nombre(s)"
                       {...field}
+                      onChange={(e) => {
+                        const formatted = capitalizeWords(e.target.value);
+                        field.onChange(formatted);
+                      }}
                     />
                     <FormMessage />
                   </FormItem>

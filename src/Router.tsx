@@ -5,6 +5,8 @@ import AuthLayout from "./layouts/AuthLayout";
 import AccountLayout from "./layouts/AccountLayout";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import DashboardLayout from "./layouts/DashboardLayout";
+import UsersDashboard from "./pages/dashboard/users";
 
 export const Router = createBrowserRouter([
   {
@@ -53,6 +55,16 @@ export const Router = createBrowserRouter([
           {
             path: "profile",
             element: <>Profile</>,
+          },
+        ],
+      },
+      {
+        path: "/dashboard",
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: "users",
+            element: <UsersDashboard />,
           },
         ],
       },

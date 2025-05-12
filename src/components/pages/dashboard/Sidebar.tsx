@@ -9,11 +9,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { ArrowLeftIcon, Ellipsis, SettingsIcon, User2Icon } from "lucide-react";
+import { ArrowLeftIcon, UsersIcon, SettingsIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import LogoutBtn from "@/components/blocks/LogoutBtn";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 type Props = {
   user: User | null;
@@ -29,15 +30,15 @@ type MenuItem = {
 
 const menuItems: MenuItem[] = [
   {
-    name: "Profile",
-    path: "/account/profile",
-    icon: <User2Icon />,
+    name: "Dashboard",
+    path: "/dashboard",
+    icon: <SettingsIcon />,
     asLink: true,
   },
   {
-    name: "Change Password",
-    path: "/account/change-password",
-    icon: <Ellipsis />,
+    name: "Usuarios",
+    path: "/dashboard/users",
+    icon: <UsersIcon />,
     asLink: true,
   },
 ];
@@ -85,25 +86,22 @@ function AppSidebar({ user }: Props) {
                 )}
               </SidebarMenuItem>
             ))}
-            {user?.role === "admin" && (
-              <SidebarMenuButton
-                asChild
-                className={`flex items-center gap-2 ${
-                  isActive(location.pathname, "/settings")
-                    ? activeClassName
-                    : ""
-                }`}
-              >
-                <Link to="/dashboard">
-                  <SettingsIcon />
-                  <span>Dashboard</span>
-                </Link>
-              </SidebarMenuButton>
-            )}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <Separator />
       <SidebarFooter className="flex-row items-center justify-between gap-4">
+        <Link
+          to={"/account/profile"}
+          className="flex-1 flex gap-2 justify-center items-center transition rounded-lg hover:bg-white dark:hover:bg-gray-700/50"
+        >
+          <Avatar title={user?.name}>
+            <AvatarFallback>{user?.name[0]}</AvatarFallback>
+          </Avatar>
+          <small className="py-2 px-4 w-full block text-center">
+            {user?.name}
+          </small>
+        </Link>
         <LogoutBtn showIcon={true} />
       </SidebarFooter>
     </Sidebar>
