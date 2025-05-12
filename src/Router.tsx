@@ -7,6 +7,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import DashboardLayout from "./layouts/DashboardLayout";
 import UsersDashboard from "./pages/dashboard/users";
+import ManageUserData from "./pages/dashboard/users/data";
 
 export const Router = createBrowserRouter([
   {
@@ -64,7 +65,16 @@ export const Router = createBrowserRouter([
         children: [
           {
             path: "users",
-            element: <UsersDashboard />,
+            children: [
+              {
+                index: true,
+                element: <UsersDashboard />,
+              },
+              {
+                path: ":pk",
+                element: <ManageUserData />,
+              },
+            ],
           },
         ],
       },

@@ -2,6 +2,7 @@ import AppSidebar from "@/components/pages/dashboard/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAutoClearResponseStatus } from "@/hooks/useAutoClearResponseStatus";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useRequireRole } from "@/hooks/useRequireRole";
 import { useAuthStore } from "@/store/auth/useAuthStore";
 import { Outlet } from "react-router-dom";
 
@@ -9,6 +10,7 @@ function DashboardLayout() {
   const user = useAuthStore((state) => state.user);
 
   useRequireAuth();
+  useRequireRole();
   useAutoClearResponseStatus();
 
   return (

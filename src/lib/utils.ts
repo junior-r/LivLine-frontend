@@ -55,3 +55,10 @@ export const capitalizeWords = (str: string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
 };
+
+export const getEnumValue = <T extends Record<string, string>>(
+  enumObj: T,
+  key: keyof T | string
+): string | undefined => {
+  return enumObj[key as keyof T];
+};

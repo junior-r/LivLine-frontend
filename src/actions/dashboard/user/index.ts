@@ -41,3 +41,15 @@ export const createUser = async (data: z.infer<typeof UserCreateSchema>) => {
     return { error: "An unknown error occurred" };
   }
 };
+
+export const getUser = async (userPk: string) => {
+  try {
+    const res = await apiWithCredentials.get(`/dashboard/users/${userPk}`, {});
+    return res;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || { error: "An unknown error occurred" };
+    }
+    return { error: "An unknown error occurred" };
+  }
+};

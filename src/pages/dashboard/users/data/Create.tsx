@@ -22,54 +22,64 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { capitalizeWords } from "@/lib/utils";
-import { UserCreateSchema, UserRole } from "@/schemas/dashboard/user";
+import {
+  UserBloodType,
+  UserCreateMedicalDataSchema,
+  UserSexOptions,
+} from "@/schemas/dashboard/medicalData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Loader } from "@/components/ui/loader";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import type { User } from "@/types/auth/user";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
-import { createUser } from "@/actions/dashboard/user";
 import { PlusIcon } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
+import { createUserMedicalData } from "@/actions/dashboard/medicalData";
 
 type Props = {
-  users: User[];
-  setUsers: Dispatch<SetStateAction<User[]>>;
+  user: User;
+  fetchData: () => void;
 };
 
-function CreateUser({ users, setUsers }: Props) {
+function CreateUserMedicalData({ user, fetchData }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
   const setError = useResponseStatusStore((state) => state.setError);
 
-  const form = useForm<z.infer<typeof UserCreateSchema>>({
-    resolver: zodResolver(UserCreateSchema),
+  const form = useForm<z.infer<typeof UserCreateMedicalDataSchema>>({
+    resolver: zodResolver(UserCreateMedicalDataSchema),
     defaultValues: {
-      name: "",
-      lastName: "",
-      email: "",
-      role: "patient",
+      dateOfBirth: undefined,
+      sex: undefined,
+      bloodType: undefined,
+      country: "",
+      city: "",
+      phone: "",
+      emergencyContactName: "",
+      emergencyContactPhone: "",
     },
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof UserCreateSchema>> = async (
-    data
-  ) => {
+  const onSubmit: SubmitHandler<
+    z.infer<typeof UserCreateMedicalDataSchema>
+  > = async (data) => {
     setIsLoading(true);
     try {
-      const res = await createUser(data);
+      const res = await createUserMedicalData(user.pk, data);
       if (res.error) {
         setError(res.error);
       }
 
       if (res.status === 201) {
-        const { user, message } = res.data;
-        setUsers([user, ...users]);
+        const { message } = res.data;
         toast.success(message);
+        form.reset();
+        setIsOpen(false);
+        fetchData();
       }
     } catch (error) {
       console.error("Register error:", error);
@@ -96,61 +106,21 @@ function CreateUser({ users, setUsers }: Props) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="name">Nombre(s)</FormLabel>
+                    <FormLabel htmlFor="address">Dirección</FormLabel>
                     <Input
-                      id="name"
+                      id="address"
                       type="text"
-                      placeholder="John"
+                      placeholder="Street 21th"
                       {...field}
-                      onChange={(e) => {
-                        const formatted = capitalizeWords(e.target.value);
-                        field.onChange(formatted);
-                      }}
                     />
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="lastName">Apellido(s)</FormLabel>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Doe"
-                      {...field}
-                      onChange={(e) => {
-                        const formatted = capitalizeWords(e.target.value);
-                        field.onChange(formatted);
-                      }}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="email">Correo electrónico</FormLabel>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="johndoe@example.com"
-                      {...field}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* <FormField
                 control={form.control}
                 name="phone"
                 render={({ field }) => (
@@ -158,6 +128,42 @@ function CreateUser({ users, setUsers }: Props) {
                     <FormLabel htmlFor="phone">Número de teléfono</FormLabel>
                     <Input
                       id="phone"
+                      type="text"
+                      placeholder="+XXXXXXXXXXX"
+                      {...field}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="emergencyContactName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="emergencyContactName">
+                      Contacto de emergencia
+                    </FormLabel>
+                    <Input
+                      id="emergencyContactName"
+                      type="text"
+                      placeholder="Jane Doe"
+                      {...field}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="emergencyContactPhone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="emergencyContactPhone">
+                      Contacto de emergencia
+                    </FormLabel>
+                    <Input
+                      id="emergencyContactPhone"
                       type="text"
                       placeholder="+XXXXXXXXXXX"
                       {...field}
@@ -238,7 +244,7 @@ function CreateUser({ users, setUsers }: Props) {
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Selecciona un tipo de sangre" />
+                          <SelectValue placeholder="Selecciona un sexo" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -279,39 +285,6 @@ function CreateUser({ users, setUsers }: Props) {
                     <FormMessage />
                   </FormItem>
                 )}
-              /> */}
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel htmlFor="role">Rol</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Selecciona un rol de usuario" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(UserRole).map(([key, label]) => (
-                          <SelectItem value={key} key={key}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage>
-                      {field.value === UserRole.admin.toLowerCase() && (
-                        <>
-                          Estás dandole permisos de administrador a este usuario
-                        </>
-                      )}
-                    </FormMessage>
-                  </FormItem>
-                )}
               />
 
               {errorStatus.error && <ErrorForm message={errorStatus.message} />}
@@ -335,4 +308,4 @@ function CreateUser({ users, setUsers }: Props) {
   );
 }
 
-export default CreateUser;
+export default CreateUserMedicalData;

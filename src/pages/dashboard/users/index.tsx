@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getLocalDateTime } from "@/lib/utils";
+import { getEnumValue, getLocalDateTime } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth/useAuthStore";
 import { usePaginationStore } from "@/store/pagination/usePaginationStore";
 import type { User } from "@/types/auth/user";
@@ -22,6 +22,7 @@ import { Link } from "react-router";
 import { useDebouncedCallback } from "use-debounce";
 import Pagination from "./Pagination";
 import CreateUser from "./Create";
+import { UserRole } from "@/schemas/dashboard/user";
 
 function UsersDashboard() {
   const currentUser = useAuthStore((state) => state.user) as User;
@@ -134,7 +135,9 @@ function UsersDashboard() {
           {data.length > 0 ? (
             data.map((user) => (
               <TableRow key={user.pk}>
-                <TableCell className="font-medium">{user.name}</TableCell>
+                <TableCell className="font-medium">
+                  {user.name} {user.lastName}
+                </TableCell>
                 <TableCell className="flex items-center gap-2">
                   <span>{user.email}</span>
                   {user.pk === currentUser.pk && (
@@ -142,7 +145,7 @@ function UsersDashboard() {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Badge>{user.role}</Badge>
+                  <Badge>{getEnumValue(UserRole, user.role)}</Badge>
                 </TableCell>
                 <TableCell>
                   {getLocalDateTime(user.createdAt, ["es-co"])}
@@ -152,7 +155,10 @@ function UsersDashboard() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center gap-2">
-                    <Link to={""} title="Datos médicos">
+                    <Link
+                      to={`/dashboard/users/${user.pk}`}
+                      title="Datos médicos"
+                    >
                       <ReceiptTextIcon className="w-5 h-5" />
                     </Link>
                     {/* <Update user={user} categories={data} setData={setData} /> */}
