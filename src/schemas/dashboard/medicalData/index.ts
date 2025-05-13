@@ -1,3 +1,4 @@
+import { zEnumFromObject } from "@/lib/utils";
 import { z } from "zod";
 
 export const UserSexOptions = {
@@ -16,12 +17,6 @@ export const UserBloodType = {
   O_POS: "O+",
   O_NEG: "O-",
 } as const;
-
-function zEnumFromObject<T extends Record<string, string>>(obj: T) {
-  return z.enum(
-    Object.keys(obj) as [keyof T & string, ...(keyof T & string)[]]
-  );
-}
 
 export const UserCreateMedicalDataSchema = z.object({
   dateOfBirth: z.coerce.date(),

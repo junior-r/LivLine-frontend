@@ -17,6 +17,12 @@ import type { MedicalData } from "@/types/dashboard/medicalData";
 import { getEnumValue, getLocalDateTime } from "@/lib/utils";
 import { UserBloodType, UserSexOptions } from "@/schemas/dashboard/medicalData";
 import { CopyButton } from "@/components/blocks/CopyBtn";
+import AllergiesPage from "./Allegies";
+import AppointmentsPage from "./Appointments";
+import SurgeriesPage from "./Surgeries";
+import ChronicConditionsPage from "./ChronicConditions";
+import MedicationsPage from "./Medications";
+import VaccinesPage from "./Vaccines";
 
 function ManageUserData() {
   const currentUser = useAuthStore((state) => state.user);
@@ -27,7 +33,7 @@ function ManageUserData() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
 
-  const getData = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     const res = await getUser(pk || "");
     setUserBaseData(res.data.user);
@@ -36,8 +42,8 @@ function ManageUserData() {
   }, [pk]);
 
   useEffect(() => {
-    getData();
-  }, [getData]);
+    fetchData();
+  }, [fetchData]);
 
   if (isLoading || !userBaseData) {
     return (
@@ -81,11 +87,14 @@ function ManageUserData() {
             <TabsList className="flex justify-between ga-4 flex-wrap mb-6 w-full">
               <TabsTrigger value="general">Información General</TabsTrigger>
               <TabsTrigger value="allergies">Alergias</TabsTrigger>
+              <TabsTrigger value="appointments">Citas previas</TabsTrigger>
               <TabsTrigger value="surgeries">Cirugías</TabsTrigger>
               <TabsTrigger value="conditions">Condiciones Crónicas</TabsTrigger>
               <TabsTrigger value="medications">Medicamentos</TabsTrigger>
+              <TabsTrigger value="vaccines">Vacunas</TabsTrigger>
             </TabsList>
 
+            {/* Información General */}
             <TabsContent value="general">
               <Card>
                 <CardHeader>
@@ -94,7 +103,7 @@ function ManageUserData() {
                     {!userMedicalData && (
                       <CreateUserMedicalData
                         user={userBaseData}
-                        fetchData={getData}
+                        fetchData={fetchData}
                       />
                     )}
                   </CardTitle>
@@ -167,6 +176,54 @@ function ManageUserData() {
                   )}
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* Alergias */}
+            <TabsContent value="allergies">
+              <AllergiesPage
+                patientDataPk={userMedicalData?.pk}
+                allergiesData={userMedicalData?.allergies}
+              />
+            </TabsContent>
+
+            {/* Citas previas */}
+            <TabsContent value="appointments">
+              <AppointmentsPage
+                patientDataPk={userMedicalData?.pk}
+                appointmentsData={userMedicalData?.appointments}
+              />
+            </TabsContent>
+
+            {/* Cirugías */}
+            <TabsContent value="surgeries">
+              <SurgeriesPage
+                patientDataPk={userMedicalData?.pk}
+                surgeriesData={userMedicalData?.surgeries}
+              />
+            </TabsContent>
+
+            {/* Condiciones Crónicas */}
+            <TabsContent value="conditions">
+              <ChronicConditionsPage
+                patientDataPk={userMedicalData?.pk}
+                chrConditionsData={userMedicalData?.chronicConditions}
+              />
+            </TabsContent>
+
+            {/* Medicamentos */}
+            <TabsContent value="medications">
+              <MedicationsPage
+                patientDataPk={userMedicalData?.pk}
+                medicationsData={userMedicalData?.medications}
+              />
+            </TabsContent>
+
+            {/* Vacunas */}
+            <TabsContent value="vaccines">
+              <VaccinesPage
+                patientDataPk={userMedicalData?.pk}
+                vaccinesData={userMedicalData?.vaccines}
+              />
             </TabsContent>
           </Tabs>
         </CardContent>

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -61,4 +62,10 @@ export const getEnumValue = <T extends Record<string, string>>(
   key: keyof T | string
 ): string | undefined => {
   return enumObj[key as keyof T];
+};
+
+export const zEnumFromObject = <T extends Record<string, string>>(obj: T) => {
+  return z.enum(
+    Object.keys(obj) as [keyof T & string, ...(keyof T & string)[]]
+  );
 };

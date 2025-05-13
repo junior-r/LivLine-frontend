@@ -6,14 +6,78 @@ export interface MedicalData {
   emergencyContactName: string;
   emergencyContactPhone: string;
   address: string;
-  medications: [];
   phone: string;
   pk: string;
   sex: string;
   userId: string;
-  chronicConditions: [];
-  allergies: [];
-  appointments: [];
-  surgeries: [];
-  vaccines: [];
+  allergies: Allergy[];
+  appointments: Appointment[];
+  chronicConditions: ChronicCondition[];
+  medications: Medication[];
+  surgeries: Surgery[];
+  vaccines: Vaccine[];
+}
+
+export type AllergySeverityType = "Mild" | "Moderate" | "Severe";
+
+export interface Allergy {
+  pk: string;
+  name: string;
+  reaction: string;
+  severity: AllergySeverityType;
+  notes?: string;
+  updatedAt: string;
+  createdAt: string;
+  patientDataPk: string;
+}
+
+export interface Appointment {
+  pk: string;
+  reason?: string;
+  diagnosis?: string;
+  doctorName?: string;
+  appointmentDate: string;
+  notes?: string;
+  createdAt: string;
+  patientDataPk?: string;
+}
+
+export interface ChronicCondition {
+  pk: string;
+  name: string;
+  diagnosisDate?: string;
+  notes?: string;
+  createdAt: string;
+  patientDataPk?: string;
+}
+
+export interface Medication {
+  pk: string;
+  name: string;
+  dosage: string;
+  frequency?: string;
+  startDate?: string;
+  endDate?: string;
+  notes?: string;
+  createdAt: string;
+  patientDataPk?: string;
+}
+
+export interface Surgery {
+  pk: string;
+  name: string;
+  date?: string;
+  notes?: string;
+  createdAt: string;
+  patientDataPk?: string;
+}
+
+export interface Vaccine {
+  pk: string;
+  name: string;
+  doseNumber: number;
+  vaccinationDate?: string;
+  notes?: string;
+  createdAt: string;
+  patientDataPk?: string;
 }
