@@ -18,23 +18,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Loader } from "@/components/ui/loader";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
 import { PlusIcon } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
-import type { Vaccine } from "@/types/dashboard/medicalData";
 import { Textarea } from "@/components/ui/textarea";
 import { VaccineSchema } from "@/schemas/dashboard/medicalData/vaccine";
 import { createVaccine } from "@/actions/dashboard/medicalData/vaccine";
 
 type Props = {
   patientDataPk: string;
-  vaccines: Vaccine[] | undefined;
-  setVaccines: Dispatch<SetStateAction<Vaccine[] | undefined>>;
+  fetchData: () => void;
 };
 
-function CreateVaccine({ patientDataPk, vaccines, setVaccines }: Props) {
+function CreateVaccine({ patientDataPk, fetchData }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
@@ -61,15 +59,11 @@ function CreateVaccine({ patientDataPk, vaccines, setVaccines }: Props) {
       }
 
       if (res.status === 201) {
-        const { vaccine, message } = res.data;
+        const { message } = res.data;
         toast.success(message);
         form.reset();
         setIsOpen(false);
-        if (vaccines) {
-          setVaccines([vaccine, ...vaccines]);
-        } else {
-          setVaccines([vaccine]);
-        }
+        fetchData();
       }
     } catch (error) {
       console.error("Register error:", error);

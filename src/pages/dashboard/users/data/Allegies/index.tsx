@@ -9,19 +9,19 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Allergy } from "@/types/dashboard/medicalData";
-import { useState } from "react";
 import CreateAllergy from "./Create";
 import { getEnumValue } from "@/lib/utils";
 import { AllergySeverityOptions } from "@/schemas/dashboard/medicalData/allergy";
+import DeleteDialog from "@/components/blocks/DeleteDialog";
+import { destroy } from "@/actions/dashboard/medicalData/allergy";
 
 type Props = {
   patientDataPk: string | undefined;
   allergiesData: Allergy[] | undefined;
+  fetchData: () => void;
 };
 
-function AllergiesPage({ patientDataPk, allergiesData }: Props) {
-  const [data, setData] = useState(allergiesData);
-
+function AllergiesPage({ patientDataPk, allergiesData, fetchData }: Props) {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "Leve":
@@ -44,8 +44,7 @@ function AllergiesPage({ patientDataPk, allergiesData }: Props) {
           {patientDataPk ? (
             <CreateAllergy
               patientDataPk={patientDataPk}
-              allergies={data}
-              setAllergies={setData}
+              fetchData={fetchData}
             />
           ) : (
             <>
@@ -69,8 +68,8 @@ function AllergiesPage({ patientDataPk, allergiesData }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data && data.length > 0 ? (
-              data.map((allergy) => (
+            {allergiesData && allergiesData.length > 0 ? (
+              allergiesData.map((allergy) => (
                 <TableRow key={allergy.pk}>
                   <TableCell className="font-medium">{allergy.name}</TableCell>
                   <TableCell>
@@ -82,7 +81,12 @@ function AllergiesPage({ patientDataPk, allergiesData }: Props) {
                   <TableCell>
                     <p>{allergy.notes}</p>
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>
+                    <DeleteDialog
+                      action={() => destroy(allergy.pk)}
+                      callback={fetchData}
+                    />
+                  </TableCell>
                 </TableRow>
               ))
             ) : (

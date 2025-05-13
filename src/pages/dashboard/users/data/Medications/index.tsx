@@ -9,17 +9,15 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Medication } from "@/types/dashboard/medicalData";
 import { getLocalDateTime } from "@/lib/utils";
-import { useState } from "react";
 import CreateMedication from "./Create";
 
 type Props = {
   patientDataPk: string | undefined;
   medicationsData: Medication[] | undefined;
+  fetchData: () => void;
 };
 
-function MedicationsPage({ patientDataPk, medicationsData }: Props) {
-  const [data, setData] = useState(medicationsData);
-
+function MedicationsPage({ patientDataPk, medicationsData, fetchData }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -29,8 +27,7 @@ function MedicationsPage({ patientDataPk, medicationsData }: Props) {
           {patientDataPk ? (
             <CreateMedication
               patientDataPk={patientDataPk}
-              medications={data}
-              setMedications={setData}
+              fetchData={fetchData}
             />
           ) : (
             <>
@@ -56,8 +53,8 @@ function MedicationsPage({ patientDataPk, medicationsData }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data && data.length > 0 ? (
-              data.map((medication) => (
+            {medicationsData && medicationsData.length > 0 ? (
+              medicationsData.map((medication) => (
                 <TableRow key={medication.pk}>
                   <TableCell className="font-medium">
                     {medication.name}

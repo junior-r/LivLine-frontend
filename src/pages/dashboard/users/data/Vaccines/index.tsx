@@ -9,17 +9,15 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Vaccine } from "@/types/dashboard/medicalData";
 import { getLocalDateTime } from "@/lib/utils";
-import { useState } from "react";
 import CreateVaccine from "./Create";
 
 type Props = {
   patientDataPk: string | undefined;
   vaccinesData: Vaccine[] | undefined;
+  fetchData: () => void;
 };
 
-function VaccinesPage({ patientDataPk, vaccinesData }: Props) {
-  const [data, setData] = useState(vaccinesData);
-
+function VaccinesPage({ patientDataPk, vaccinesData, fetchData }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -29,8 +27,7 @@ function VaccinesPage({ patientDataPk, vaccinesData }: Props) {
           {patientDataPk ? (
             <CreateVaccine
               patientDataPk={patientDataPk}
-              vaccines={data}
-              setVaccines={setData}
+              fetchData={fetchData}
             />
           ) : (
             <>
@@ -54,8 +51,8 @@ function VaccinesPage({ patientDataPk, vaccinesData }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data && data.length > 0 ? (
-              data.map((vaccine) => (
+            {vaccinesData && vaccinesData.length > 0 ? (
+              vaccinesData.map((vaccine) => (
                 <TableRow key={vaccine.pk}>
                   <TableCell className="font-medium">{vaccine.name}</TableCell>
                   <TableCell>{vaccine.doseNumber}</TableCell>

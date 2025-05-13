@@ -18,27 +18,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Loader } from "@/components/ui/loader";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
 import { PlusIcon } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
-import type { Appointment } from "@/types/dashboard/medicalData";
 import { Textarea } from "@/components/ui/textarea";
 import { AppointmentSchema } from "@/schemas/dashboard/medicalData/appointment";
 import { createAppointment } from "@/actions/dashboard/medicalData/appointment";
 
 type Props = {
   patientDataPk: string;
-  appointments: Appointment[] | undefined;
-  setAppointments: Dispatch<SetStateAction<Appointment[] | undefined>>;
+  fetchData: () => void;
 };
 
-function CreateAppointment({
-  patientDataPk,
-  appointments,
-  setAppointments,
-}: Props) {
+function CreateAppointment({ patientDataPk, fetchData }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
@@ -66,15 +60,11 @@ function CreateAppointment({
       }
 
       if (res.status === 201) {
-        const { appointment, message } = res.data;
+        const { message } = res.data;
         toast.success(message);
         form.reset();
         setIsOpen(false);
-        if (appointments) {
-          setAppointments([appointment, ...appointments]);
-        } else {
-          setAppointments([appointment]);
-        }
+        fetchData();
       }
     } catch (error) {
       console.error("Register error:", error);

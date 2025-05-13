@@ -29,22 +29,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Loader } from "@/components/ui/loader";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
 import { PlusIcon } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
 import { createAllergy } from "@/actions/dashboard/medicalData/allergy";
-import type { Allergy } from "@/types/dashboard/medicalData";
 import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
   patientDataPk: string;
-  allergies: Allergy[] | undefined;
-  setAllergies: Dispatch<SetStateAction<Allergy[] | undefined>>;
+  fetchData: () => void;
 };
 
-function CreateAllergy({ patientDataPk, allergies, setAllergies }: Props) {
+function CreateAllergy({ patientDataPk, fetchData }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
@@ -71,15 +69,11 @@ function CreateAllergy({ patientDataPk, allergies, setAllergies }: Props) {
       }
 
       if (res.status === 201) {
-        const { allergy, message } = res.data;
+        const { message } = res.data;
         toast.success(message);
         form.reset();
         setIsOpen(false);
-        if (allergies) {
-          setAllergies([allergy, ...allergies]);
-        } else {
-          setAllergies([allergy]);
-        }
+        fetchData();
       }
     } catch (error) {
       console.error("Register error:", error);

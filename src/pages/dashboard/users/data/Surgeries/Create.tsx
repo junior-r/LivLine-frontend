@@ -18,23 +18,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Loader } from "@/components/ui/loader";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
 import { PlusIcon } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
-import type { Surgery } from "@/types/dashboard/medicalData";
 import { Textarea } from "@/components/ui/textarea";
 import { SurgerySchema } from "@/schemas/dashboard/medicalData/surgery";
 import { createSurgery } from "@/actions/dashboard/medicalData/surgery";
 
 type Props = {
   patientDataPk: string;
-  surgeries: Surgery[] | undefined;
-  setSurgeries: Dispatch<SetStateAction<Surgery[] | undefined>>;
+  fetchData: () => void;
 };
 
-function CreateSurgery({ patientDataPk, surgeries, setSurgeries }: Props) {
+function CreateSurgery({ patientDataPk, fetchData }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
@@ -60,15 +58,11 @@ function CreateSurgery({ patientDataPk, surgeries, setSurgeries }: Props) {
       }
 
       if (res.status === 201) {
-        const { surgery, message } = res.data;
+        const { message } = res.data;
         toast.success(message);
         form.reset();
         setIsOpen(false);
-        if (surgeries) {
-          setSurgeries([surgery, ...surgeries]);
-        } else {
-          setSurgeries([surgery]);
-        }
+        fetchData();
       }
     } catch (error) {
       console.error("Register error:", error);

@@ -18,27 +18,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Loader } from "@/components/ui/loader";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
 import { PlusIcon } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
-import type { Medication } from "@/types/dashboard/medicalData";
 import { Textarea } from "@/components/ui/textarea";
 import { MedicationSchema } from "@/schemas/dashboard/medicalData/medication";
 import { createMedication } from "@/actions/dashboard/medicalData/medication";
 
 type Props = {
   patientDataPk: string;
-  medications: Medication[] | undefined;
-  setMedications: Dispatch<SetStateAction<Medication[] | undefined>>;
+  fetchData: () => void;
 };
 
-function CreateMedication({
-  patientDataPk,
-  medications,
-  setMedications,
-}: Props) {
+function CreateMedication({ patientDataPk, fetchData }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
@@ -70,15 +64,11 @@ function CreateMedication({
       }
 
       if (res.status === 201) {
-        const { medication, message } = res.data;
+        const { message } = res.data;
         toast.success(message);
         form.reset();
         setIsOpen(false);
-        if (medications) {
-          setMedications([medication, ...medications]);
-        } else {
-          setMedications([medication]);
-        }
+        fetchData();
       }
     } catch (error) {
       console.error("Register error:", error);

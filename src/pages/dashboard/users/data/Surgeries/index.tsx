@@ -9,16 +9,15 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Surgery } from "@/types/dashboard/medicalData";
 import { getLocalDateTime } from "@/lib/utils";
-import { useState } from "react";
 import CreateSurgery from "./Create";
 
 type Props = {
   patientDataPk: string | undefined;
   surgeriesData: Surgery[] | undefined;
+  fetchData: () => void;
 };
 
-function SurgeriesPage({ patientDataPk, surgeriesData }: Props) {
-  const [data, setData] = useState(surgeriesData);
+function SurgeriesPage({ patientDataPk, surgeriesData, fetchData }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -28,8 +27,7 @@ function SurgeriesPage({ patientDataPk, surgeriesData }: Props) {
           {patientDataPk ? (
             <CreateSurgery
               patientDataPk={patientDataPk}
-              surgeries={data}
-              setSurgeries={setData}
+              fetchData={fetchData}
             />
           ) : (
             <>
@@ -52,8 +50,8 @@ function SurgeriesPage({ patientDataPk, surgeriesData }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data && data.length > 0 ? (
-              data.map((surgery) => (
+            {surgeriesData && surgeriesData.length > 0 ? (
+              surgeriesData.map((surgery) => (
                 <TableRow key={surgery.pk}>
                   <TableCell className="font-medium">{surgery.name}</TableCell>
                   <TableCell>

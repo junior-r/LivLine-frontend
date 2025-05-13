@@ -9,17 +9,19 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ChronicCondition } from "@/types/dashboard/medicalData";
 import { getLocalDateTime } from "@/lib/utils";
-import { useState } from "react";
 import CreateCondition from "./Create";
 
 type Props = {
   patientDataPk: string | undefined;
   chrConditionsData: ChronicCondition[] | undefined;
+  fetchData: () => void;
 };
 
-function ChronicConditionsPage({ patientDataPk, chrConditionsData }: Props) {
-  const [data, setData] = useState(chrConditionsData);
-
+function ChronicConditionsPage({
+  patientDataPk,
+  chrConditionsData,
+  fetchData,
+}: Props) {
   return (
     <Card>
       <CardHeader>
@@ -29,8 +31,7 @@ function ChronicConditionsPage({ patientDataPk, chrConditionsData }: Props) {
           {patientDataPk ? (
             <CreateCondition
               patientDataPk={patientDataPk}
-              conditions={data}
-              setConditions={setData}
+              fetchData={fetchData}
             />
           ) : (
             <>
@@ -53,8 +54,8 @@ function ChronicConditionsPage({ patientDataPk, chrConditionsData }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data && data.length > 0 ? (
-              data.map((condition) => (
+            {chrConditionsData && chrConditionsData.length > 0 ? (
+              chrConditionsData.map((condition) => (
                 <TableRow key={condition.pk}>
                   <TableCell className="font-medium">
                     {condition.name}

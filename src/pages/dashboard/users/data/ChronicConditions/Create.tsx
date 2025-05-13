@@ -18,23 +18,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Loader } from "@/components/ui/loader";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
 import { PlusIcon } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
-import type { ChronicCondition } from "@/types/dashboard/medicalData";
 import { Textarea } from "@/components/ui/textarea";
 import { ChronicConditionSchema } from "@/schemas/dashboard/medicalData/chronicCondition";
 import { createChronicCondition } from "@/actions/dashboard/medicalData/chronicCondition";
 
 type Props = {
   patientDataPk: string;
-  conditions: ChronicCondition[] | undefined;
-  setConditions: Dispatch<SetStateAction<ChronicCondition[] | undefined>>;
+  fetchData: () => void;
 };
 
-function CreateCondition({ patientDataPk, conditions, setConditions }: Props) {
+function CreateCondition({ patientDataPk, fetchData }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
@@ -60,15 +58,11 @@ function CreateCondition({ patientDataPk, conditions, setConditions }: Props) {
       }
 
       if (res.status === 201) {
-        const { condition, message } = res.data;
+        const { message } = res.data;
         toast.success(message);
         form.reset();
         setIsOpen(false);
-        if (conditions) {
-          setConditions([condition, ...conditions]);
-        } else {
-          setConditions([condition]);
-        }
+        fetchData();
       }
     } catch (error) {
       console.error("Register error:", error);

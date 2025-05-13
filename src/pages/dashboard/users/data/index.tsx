@@ -23,6 +23,8 @@ import SurgeriesPage from "./Surgeries";
 import ChronicConditionsPage from "./ChronicConditions";
 import MedicationsPage from "./Medications";
 import VaccinesPage from "./Vaccines";
+import { Button } from "@/components/ui/button";
+import { RefreshCwIcon } from "lucide-react";
 
 function ManageUserData() {
   const currentUser = useAuthStore((state) => state.user);
@@ -80,7 +82,17 @@ function ManageUserData() {
               </div>
             </CardDescription>
           </section>
-          <CopyButton textToCopy="sfas" />
+          <section className="flex gap-2 items-center">
+            <CopyButton textToCopy="sfas" />
+            <Button
+              variant={"outline"}
+              onClick={fetchData}
+              className="flex items-center gap-2"
+            >
+              <RefreshCwIcon />
+              <span>Recargar</span>
+            </Button>
+          </section>
         </CardHeader>
         <CardContent className="p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -183,6 +195,7 @@ function ManageUserData() {
               <AllergiesPage
                 patientDataPk={userMedicalData?.pk}
                 allergiesData={userMedicalData?.allergies}
+                fetchData={fetchData}
               />
             </TabsContent>
 
@@ -191,6 +204,7 @@ function ManageUserData() {
               <AppointmentsPage
                 patientDataPk={userMedicalData?.pk}
                 appointmentsData={userMedicalData?.appointments}
+                fetchData={fetchData}
               />
             </TabsContent>
 
@@ -199,6 +213,7 @@ function ManageUserData() {
               <SurgeriesPage
                 patientDataPk={userMedicalData?.pk}
                 surgeriesData={userMedicalData?.surgeries}
+                fetchData={fetchData}
               />
             </TabsContent>
 
@@ -207,6 +222,7 @@ function ManageUserData() {
               <ChronicConditionsPage
                 patientDataPk={userMedicalData?.pk}
                 chrConditionsData={userMedicalData?.chronicConditions}
+                fetchData={fetchData}
               />
             </TabsContent>
 
@@ -215,6 +231,7 @@ function ManageUserData() {
               <MedicationsPage
                 patientDataPk={userMedicalData?.pk}
                 medicationsData={userMedicalData?.medications}
+                fetchData={fetchData}
               />
             </TabsContent>
 
@@ -223,6 +240,7 @@ function ManageUserData() {
               <VaccinesPage
                 patientDataPk={userMedicalData?.pk}
                 vaccinesData={userMedicalData?.vaccines}
+                fetchData={fetchData}
               />
             </TabsContent>
           </Tabs>
