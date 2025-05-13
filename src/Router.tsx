@@ -8,6 +8,7 @@ import Register from "./pages/auth/Register";
 import DashboardLayout from "./layouts/DashboardLayout";
 import UsersDashboard from "./pages/dashboard/users";
 import ManageUserData from "./pages/dashboard/users/data";
+import DashboardPage from "./pages/dashboard";
 
 export const Router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ export const Router = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardLayout />,
         children: [
+          {
+            index: true,
+            element: <DashboardPage />,
+          },
           {
             path: "users",
             children: [
