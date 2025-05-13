@@ -2,6 +2,7 @@ import { logout } from "@/actions/auth/logout";
 import { useAuthStore } from "@/store/auth/useAuthStore";
 import { Button } from "../ui/button";
 import { LogOutIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 
 type Props = {
   showIcon?: boolean;
@@ -9,13 +10,14 @@ type Props = {
 
 function LogoutBtn({ showIcon }: Props) {
   const setUser = useAuthStore((state) => state.setUser);
+  const navigate = useNavigate();
 
   const handleEvent = async () => {
     const res = await logout();
 
     if (res.status === 200) {
       setUser(null);
-      return;
+      navigate("/");
     }
     return;
   };

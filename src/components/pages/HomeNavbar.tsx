@@ -14,7 +14,6 @@ import {
 
 function Navbar() {
   const user = useAuthStore((state) => state.user);
-  console.log("User: ", user);
 
   const menuItems = [
     {

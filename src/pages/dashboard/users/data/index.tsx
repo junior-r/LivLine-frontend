@@ -57,7 +57,7 @@ function ManageUserData() {
   return (
     <section className="container mx-auto py-6">
       <Card className="py-0">
-        <CardHeader className="bg-slate-50 py-4 flex justify-between items-start">
+        <CardHeader className="bg-blue-100 py-4 flex justify-between items-start">
           <section>
             <CardTitle className="text-2xl">Expediente Médico</CardTitle>
             <CardDescription>
@@ -84,7 +84,7 @@ function ManageUserData() {
         </CardHeader>
         <CardContent className="p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="flex justify-between ga-4 flex-wrap mb-6 w-full">
+            <TabsList className="flex justify-between ga-4 flex-wrap mb-6 w-full bg-blue-200">
               <TabsTrigger value="general">Información General</TabsTrigger>
               <TabsTrigger value="allergies">Alergias</TabsTrigger>
               <TabsTrigger value="appointments">Citas previas</TabsTrigger>
