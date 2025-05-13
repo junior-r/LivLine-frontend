@@ -10,6 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Medication } from "@/types/dashboard/medicalData";
 import { getLocalDateTime } from "@/lib/utils";
 import CreateMedication from "./Create";
+import DeleteDialog from "@/components/blocks/DeleteDialog";
+import { destroy } from "@/actions/dashboard/medicalData/medication";
 
 type Props = {
   patientDataPk: string | undefined;
@@ -72,7 +74,12 @@ function MedicationsPage({ patientDataPk, medicationsData, fetchData }: Props) {
                   <TableCell>
                     <p>{medication.notes}</p>
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>
+                    <DeleteDialog
+                      action={() => destroy(medication.pk)}
+                      callback={fetchData}
+                    />
+                  </TableCell>
                 </TableRow>
               ))
             ) : (

@@ -10,6 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ChronicCondition } from "@/types/dashboard/medicalData";
 import { getLocalDateTime } from "@/lib/utils";
 import CreateCondition from "./Create";
+import DeleteDialog from "@/components/blocks/DeleteDialog";
+import { destroy } from "@/actions/dashboard/medicalData/chronicCondition";
 
 type Props = {
   patientDataPk: string | undefined;
@@ -67,7 +69,12 @@ function ChronicConditionsPage({
                   <TableCell>
                     <p>{condition.notes}</p>
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>
+                    <DeleteDialog
+                      action={() => destroy(condition.pk)}
+                      callback={fetchData}
+                    />
+                  </TableCell>
                 </TableRow>
               ))
             ) : (

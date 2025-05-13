@@ -21,3 +21,18 @@ export const createAppointment = async (
     return { error: "An unknown error occurred" };
   }
 };
+
+export const destroy = async (pk: string) => {
+  try {
+    const res = await apiWithCredentials.delete(
+      `/dashboard/appointments/${pk}`,
+      {}
+    );
+    return res;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || { error: "An unknown error occurred" };
+    }
+    return { error: "An unknown error occurred" };
+  }
+};
