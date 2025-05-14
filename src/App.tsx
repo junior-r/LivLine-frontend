@@ -73,7 +73,7 @@ function App() {
                     Transformando la Gestión de Datos Médicos
                   </h1>
                   <p className="max-w-[600px] text-gray-600 md:text-xl">
-                    LivLine es una plataforma segura y eficiente para registrar,
+                    Livline es una plataforma segura y eficiente para registrar,
                     gestionar y consultar datos médicos con la más alta
                     confidencialidad.
                   </p>
@@ -109,7 +109,7 @@ function App() {
                   Sobre Nosotros
                 </h2>
                 <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mx-auto">
-                  En LivLine, nos dedicamos a revolucionar la forma en que los
+                  En Livline, nos dedicamos a revolucionar la forma en que los
                   profesionales de la salud acceden y utilizan los datos
                   médicos.
                 </p>
@@ -158,7 +158,7 @@ function App() {
                   Nuestro Producto
                 </h2>
                 <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mx-auto">
-                  Pulsera LivLine con código QR para acceso inmediato a
+                  Pulsera Livline con código QR para acceso inmediato a
                   información médica vital
                 </p>
               </div>
@@ -170,7 +170,7 @@ function App() {
                 <div className="overflow-hidden rounded-lg border border-blue-100 shadow-sm">
                   <img
                     src={product1}
-                    alt="Pulsera LivLine - Vista frontal"
+                    alt="Pulsera Livline - Vista frontal"
                     width={600}
                     height={400}
                     className="w-full object-cover"
@@ -407,7 +407,7 @@ function App() {
                     <div className="space-y-1">
                       <p className="text-sm font-medium">Dirección</p>
                       <p className="text-sm text-gray-600">
-                        Calle Innovación 123, 28001 Madrid, España
+                        Cl 25 #17-26, Tuluá, Valle del Cauca, Colombia
                       </p>
                     </div>
                   </div>
@@ -496,7 +496,7 @@ function App() {
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="h-6 w-6 text-blue-600" />
                   <span className="text-xl font-bold text-blue-600">
-                    LivLine
+                    Livline
                   </span>
                 </div>
                 <p className="text-sm text-gray-600">
@@ -579,7 +579,7 @@ function App() {
             <div className="mt-8 border-t pt-8 text-center text-sm text-gray-600">
               <p>
                 © {currentYear === 2025 ? currentYear : `2025 - ${currentYear}`}{" "}
-                LivLine. Todos los derechos reservados.
+                Livline. Todos los derechos reservados.
               </p>
             </div>
           </div>

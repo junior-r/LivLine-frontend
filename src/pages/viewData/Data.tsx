@@ -68,7 +68,7 @@ function ViewDataPage() {
         </Link>
       </Button>
       <Card className="py-0">
-        <CardHeader className="bg-blue-100 py-4 flex justify-between items-start">
+        <CardHeader className="bg-blue-100 py-4 flex justify-between gap-2 items-start">
           <section>
             <CardTitle className="text-2xl">Expediente Médico</CardTitle>
             <CardDescription>
@@ -89,7 +89,7 @@ function ViewDataPage() {
               </div>
             </CardDescription>
           </section>
-          <section className="flex gap-2 items-center">
+          <section className="flex gap-2 items-center flex-wrap justify-end">
             <CopyButton textToCopy={accessUrl} />
             <Button
               variant={"outline"}
@@ -103,7 +103,7 @@ function ViewDataPage() {
         </CardHeader>
         <CardContent className="p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="flex justify-between ga-4 flex-wrap mb-6 w-full bg-blue-200">
+            <TabsList className="flex justify-between gap-4 flex-wrap h-auto mb-6 w-full bg-blue-200 overflow-auto">
               <TabsTrigger value="general">Información General</TabsTrigger>
               <TabsTrigger value="allergies">Alergias</TabsTrigger>
               <TabsTrigger value="appointments">Citas previas</TabsTrigger>

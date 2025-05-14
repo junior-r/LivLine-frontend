@@ -36,9 +36,9 @@ export const MainLayout = () => {
     );
   } else {
     return (
-      <>
+      <div className="px-2">
         <Outlet />
-      </>
+      </div>
     );
   }
 };

@@ -40,7 +40,7 @@ function Navbar() {
       <div className="container flex h-16 items-center justify-between mx-auto">
         <Link to={"/"} className="flex items-center gap-2">
           <img src={logo} className="w-12 h-12" alt="Logo de la página web." />
-          <span className="text-xl font-bold">LivLine</span>
+          <span className="text-xl font-bold">Livline</span>
         </Link>
         <nav className="hidden md:flex gap-6">
           {menuItems.map((item, idx) => (
