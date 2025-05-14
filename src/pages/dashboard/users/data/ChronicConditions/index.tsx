@@ -68,7 +68,7 @@ function ChronicConditionsPage({
                   </TableCell>
                   <TableCell>
                     {condition.diagnosisDate &&
-                      getLocalDateTime(condition.diagnosisDate, ["es-co"])}
+                      getLocalDateTime(condition.diagnosisDate, ["es-CO"])}
                   </TableCell>
                   <TableCell>
                     <p>{condition.notes}</p>

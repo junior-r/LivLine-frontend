@@ -132,7 +132,7 @@ function ViewDataPage() {
                           <span>
                             {getLocalDateTime(
                               userMedicalData.dateOfBirth,
-                              ["es-co"],
+                              ["es-CO"],
                               true
                             )}
                           </span>

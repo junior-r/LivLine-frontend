@@ -73,11 +73,11 @@ function MedicationsPage({
                   <TableCell>{medication.frequency}</TableCell>
                   <TableCell>
                     {medication.startDate &&
-                      getLocalDateTime(medication.startDate, ["es-co"])}
+                      getLocalDateTime(medication.startDate, ["es-CO"])}
                   </TableCell>
                   <TableCell>
                     {medication.endDate &&
-                      getLocalDateTime(medication.endDate, ["es-co"])}
+                      getLocalDateTime(medication.endDate, ["es-CO"])}
                   </TableCell>
                   <TableCell>
                     <p>{medication.notes}</p>

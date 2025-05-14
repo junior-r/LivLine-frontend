@@ -31,6 +31,7 @@ export const getLocalDateTime = (
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    timeZone: "UTC",
   };
 
   const localDate = date.toLocaleDateString(locales, dateFormatPptions);
@@ -38,6 +39,7 @@ export const getLocalDateTime = (
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
+    timeZone: "UTC",
   });
 
   if (onlyDate) return localDate;

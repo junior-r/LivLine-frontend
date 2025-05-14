@@ -133,7 +133,7 @@ function ManageUserData() {
                           <span>
                             {getLocalDateTime(
                               userMedicalData.dateOfBirth,
-                              ["es-co"],
+                              ["es-CO"],
                               true
                             )}
                           </span>

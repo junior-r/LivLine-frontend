@@ -68,7 +68,7 @@ function VaccinesPage({
                   <TableCell>{vaccine.doseNumber}</TableCell>
                   <TableCell>
                     {vaccine.vaccinationDate &&
-                      getLocalDateTime(vaccine.vaccinationDate, ["es-co"])}
+                      getLocalDateTime(vaccine.vaccinationDate, ["es-CO"])}
                   </TableCell>
                   <TableCell>
                     <p>{vaccine.notes}</p>

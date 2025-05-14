@@ -35,7 +35,7 @@ const menuItems: MenuItem[] = [
     asLink: true,
   },
   {
-    name: "Change Password",
+    name: "Cambiar contraseña",
     path: "/account/change-password",
     icon: <Ellipsis />,
     asLink: true,

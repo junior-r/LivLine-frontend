@@ -69,7 +69,7 @@ function AppointmentsPage({
                   <TableCell>{appt.diagnosis}</TableCell>
                   <TableCell>{appt.doctorName}</TableCell>
                   <TableCell>
-                    {getLocalDateTime(appt.appointmentDate, ["es-co"])}
+                    {getLocalDateTime(appt.appointmentDate, ["es-CO"])}
                   </TableCell>
                   <TableCell>
                     <p>{appt.notes}</p>

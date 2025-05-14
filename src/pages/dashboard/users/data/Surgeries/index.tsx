@@ -65,7 +65,7 @@ function SurgeriesPage({
                 <TableRow key={surgery.pk}>
                   <TableCell className="font-medium">{surgery.name}</TableCell>
                   <TableCell>
-                    {surgery.date && getLocalDateTime(surgery.date, ["es-co"])}
+                    {surgery.date && getLocalDateTime(surgery.date, ["es-CO"])}
                   </TableCell>
                   <TableCell>
                     <p>{surgery.notes}</p>

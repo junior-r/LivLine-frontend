@@ -157,10 +157,10 @@ function UsersDashboard() {
                   <Badge>{getEnumValue(UserRole, user.role)}</Badge>
                 </TableCell>
                 <TableCell>
-                  {getLocalDateTime(user.createdAt, ["es-co"])}
+                  {getLocalDateTime(user.createdAt, ["es-CO"])}
                 </TableCell>
                 <TableCell>
-                  {getLocalDateTime(user.updatedAt, ["es-co"])}
+                  {getLocalDateTime(user.updatedAt, ["es-CO"])}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center gap-2">
