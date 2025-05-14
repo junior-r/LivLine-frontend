@@ -27,24 +27,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Loader } from "@/components/ui/loader";
-import { useState } from "react";
-import type { User } from "@/types/auth/user";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
-import { PlusIcon } from "lucide-react";
+import { FilePenLine } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
-import { createMedicalData } from "@/actions/dashboard/medicalData";
 import {
   UserBloodTypeOptions,
   UserSexOptions,
+  type MedicalData,
 } from "@/types/dashboard/medicalData";
+import { validateMedicalData } from "@/utils/medical";
+import { updateMedicalData } from "@/actions/dashboard/medicalData";
 
 type Props = {
-  user: User;
+  mediacalData: MedicalData;
   fetchData: () => void;
 };
 
-function CreateUserMedicalData({ user, fetchData }: Props) {
+function UpdateMedicalData({ mediacalData, fetchData }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
@@ -52,16 +53,7 @@ function CreateUserMedicalData({ user, fetchData }: Props) {
 
   const form = useForm<z.infer<typeof MedicalDataSchema>>({
     resolver: zodResolver(MedicalDataSchema),
-    defaultValues: {
-      dateOfBirth: undefined,
-      sex: undefined,
-      bloodType: undefined,
-      country: "",
-      city: "",
-      phone: "",
-      emergencyContactName: "",
-      emergencyContactPhone: "",
-    },
+    defaultValues: validateMedicalData(mediacalData),
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof MedicalDataSchema>> = async (
@@ -69,12 +61,12 @@ function CreateUserMedicalData({ user, fetchData }: Props) {
   ) => {
     setIsLoading(true);
     try {
-      const res = await createMedicalData(user.pk, data);
+      const res = await updateMedicalData(mediacalData.pk, data);
       if (res.error) {
         setError(res.error);
       }
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         const { message } = res.data;
         toast.success(message);
         form.reset();
@@ -91,16 +83,20 @@ function CreateUserMedicalData({ user, fetchData }: Props) {
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) form.reset();
+  }, [isOpen, form]);
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button className="flex items-center gap-2 bg-yellow-400 text-black hover:text-white">
-          <PlusIcon />
-          <span>Crear</span>
+        <Button className="flex items-center gap-2 bg-blue-500 text-white">
+          <FilePenLine />
+          <span>Actualizar</span>
         </Button>
       </SheetTrigger>
       <SheetContent className="overflow-auto">
-        <SheetHeader>Crear un nuevo usuario</SheetHeader>
+        <SheetHeader>Actualizar datos generales</SheetHeader>
         <section className="p-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -225,7 +221,7 @@ function CreateUserMedicalData({ user, fetchData }: Props) {
                       autoComplete="off"
                       id="dateOfBirth"
                       type="date"
-                      value={field.value?.toString()}
+                      value={field.value}
                       onChange={field.onChange}
                     />
                     <FormMessage />
@@ -310,4 +306,4 @@ function CreateUserMedicalData({ user, fetchData }: Props) {
   );
 }
 
-export default CreateUserMedicalData;
+export default UpdateMedicalData;

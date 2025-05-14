@@ -50,8 +50,8 @@ import type {
 } from "@/types/dashboard";
 import { Loader } from "@/components/ui/loader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserBloodType } from "@/schemas/dashboard/medicalData";
 import { Activity, Users } from "lucide-react";
+import { UserBloodTypeOptions } from "@/types/dashboard/medicalData";
 
 function DashboardPage() {
   const [totalUsers, setTotalUsers] = useState(0);
@@ -85,7 +85,9 @@ function DashboardPage() {
 
   const transformedBloodTypeData = usersBloodTypeData.map((item) => ({
     ...item,
-    label: UserBloodType[item.type as keyof typeof UserBloodType] || item.type,
+    label:
+      UserBloodTypeOptions[item.type as keyof typeof UserBloodTypeOptions] ||
+      item.type,
   }));
 
   const fetchUserGrowth = async () => {

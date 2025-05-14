@@ -1,35 +1,35 @@
-import { zEnumFromObject } from "@/lib/utils";
+import {
+  UserBloodTypeOptions,
+  UserSexOptions,
+} from "@/types/dashboard/medicalData";
 import { z } from "zod";
 
-export const UserSexOptions = {
-  M: "Masculino",
-  F: "Femenino",
-  O: "Otro",
-} as const;
+// Helper to create enum schemas (define once)
+const createEnumSchema = <T extends Record<string, string>>(obj: T) => {
+  const keys = Object.keys(obj);
+  return z.enum(keys as [string, ...string[]]);
+};
 
-export const UserBloodType = {
-  A_POS: "A+",
-  A_NEG: "A-",
-  B_POS: "B+",
-  B_NEG: "B-",
-  AB_POS: "AB+",
-  AB_NEG: "AB-",
-  O_POS: "O+",
-  O_NEG: "O-",
-} as const;
+// ===== Core Schemas =====
+export const SexSchema = createEnumSchema(UserSexOptions);
+export const BloodTypeSchema = createEnumSchema(UserBloodTypeOptions);
 
-export const UserCreateMedicalDataSchema = z.object({
-  dateOfBirth: z.coerce.date(),
-  sex: zEnumFromObject(UserSexOptions),
-  bloodType: zEnumFromObject(UserBloodType),
-  country: z.string().min(3, { message: "Este dato es requerido" }),
-  city: z.string().min(3, { message: "Este dato es requerido" }),
-  phone: z.string().min(3, { message: "Este dato es requerido" }),
-  address: z.string().min(3, { message: "Este dato es requerido" }),
-  emergencyContactName: z
+// ===== Main Schema =====
+export const MedicalDataSchema = z.object({
+  dateOfBirth: z
     .string()
-    .min(3, { message: "Este dato es requerido" }),
-  emergencyContactPhone: z
-    .string()
-    .min(3, { message: "Este dato es requerido" }),
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .date(),
+  sex: SexSchema,
+  bloodType: BloodTypeSchema,
+  country: z.string().min(3, "Este dato es requerido"),
+  city: z.string().min(3, "Este dato es requerido"),
+  phone: z.string().min(3, "Este dato es requerido"),
+  address: z.string().min(3, "Este dato es requerido"),
+  emergencyContactName: z.string().min(3, "Este dato es requerido"),
+  emergencyContactPhone: z.string().min(3, "Este dato es requerido"),
 });
+
+export const MedicalDataUpdateSchema = MedicalDataSchema.partial();
+
+export type MedicalDataFormValues = z.infer<typeof MedicalDataSchema>;

@@ -1,3 +1,26 @@
+// ===== Enums =====
+export const UserSexOptions = {
+  M: "Masculino",
+  F: "Femenino",
+  O: "Otro",
+} as const;
+
+export const UserBloodTypeOptions = {
+  A_POS: "A+",
+  A_NEG: "A-",
+  B_POS: "B+",
+  B_NEG: "B-",
+  AB_POS: "AB+",
+  AB_NEG: "AB-",
+  O_POS: "O+",
+  O_NEG: "O-",
+} as const;
+
+// ===== Type Definitions =====
+export type UserSex = keyof typeof UserSexOptions;
+export type UserBloodType = keyof typeof UserBloodTypeOptions;
+
+// ===== API Response Interface =====
 export interface MedicalData {
   bloodType: string;
   city: string;

@@ -13,9 +13,12 @@ import type { UserData } from "@/types/dashboard/user";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import CreateUserMedicalData from "./Create";
-import type { MedicalData } from "@/types/dashboard/medicalData";
+import {
+  UserBloodTypeOptions,
+  UserSexOptions,
+  type MedicalData,
+} from "@/types/dashboard/medicalData";
 import { getEnumValue, getLocalDateTime } from "@/lib/utils";
-import { UserBloodType, UserSexOptions } from "@/schemas/dashboard/medicalData";
 import { CopyButton } from "@/components/blocks/CopyBtn";
 import AllergiesPage from "./Allegies";
 import AppointmentsPage from "./Appointments";
@@ -25,21 +28,22 @@ import MedicationsPage from "./Medications";
 import VaccinesPage from "./Vaccines";
 import { Button } from "@/components/ui/button";
 import { RefreshCwIcon } from "lucide-react";
+import UpdateMedicalData from "./Update";
 
 function ManageUserData() {
   const currentUser = useAuthStore((state) => state.user);
   const params = useParams();
   const pk = params.pk as string;
-  const [userBaseData, setUserBaseData] = useState<UserData>();
-  const [userMedicalData, setUserMedicalData] = useState<MedicalData>();
+  const [userData, setUserData] = useState<UserData>();
+  const [medicalData, setMedicalData] = useState<MedicalData>();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     const res = await getUser(pk);
-    setUserBaseData(res.data.user);
-    setUserMedicalData(res.data.medicalData);
+    setUserData(res.data.user);
+    setMedicalData(res.data.medicalData);
     setIsLoading(false);
   }, [pk]);
 
@@ -47,7 +51,7 @@ function ManageUserData() {
     fetchData();
   }, [fetchData]);
 
-  if (isLoading || !userBaseData) {
+  if (isLoading || !userData) {
     return (
       <div className="flex items-center justify-center h-full w-full gap-2">
         <Loader size="md" />
@@ -72,14 +76,14 @@ function ManageUserData() {
                 <span>Nombre: </span>
                 <span>
                   <strong>
-                    {userBaseData.name} {userBaseData.lastName}
+                    {userData.name} {userData.lastName}
                   </strong>
                 </span>
               </div>
               <div>
                 <span>Correo electrónico: </span>
                 <span>
-                  <strong>{userBaseData.email}</strong>
+                  <strong>{userData.email}</strong>
                 </span>
               </div>
             </CardDescription>
@@ -114,16 +118,22 @@ function ManageUserData() {
                 <CardHeader>
                   <CardTitle className="flex justify-between gap-4">
                     <span>Datos Generales</span>
-                    {!userMedicalData && (
+                    {!medicalData && (
                       <CreateUserMedicalData
-                        user={userBaseData}
+                        user={userData}
+                        fetchData={fetchData}
+                      />
+                    )}
+                    {medicalData && (
+                      <UpdateMedicalData
+                        mediacalData={medicalData}
                         fetchData={fetchData}
                       />
                     )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {userMedicalData ? (
+                  {medicalData ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <div className="flex justify-between border-b pb-2">
@@ -132,7 +142,7 @@ function ManageUserData() {
                           </span>
                           <span>
                             {getLocalDateTime(
-                              userMedicalData.dateOfBirth,
+                              medicalData.dateOfBirth,
                               ["es-CO"],
                               true
                             )}
@@ -142,46 +152,46 @@ function ManageUserData() {
                           <span className="font-medium">Tipo de Sangre:</span>
                           <span>
                             {getEnumValue(
-                              UserBloodType,
-                              userMedicalData.bloodType
+                              UserBloodTypeOptions,
+                              medicalData.bloodType
                             )}
                           </span>
                         </div>
                         <div className="flex justify-between border-b pb-2">
                           <span className="font-medium">Sexo:</span>
                           <span>
-                            {getEnumValue(UserSexOptions, userMedicalData.sex)}
+                            {getEnumValue(UserSexOptions, medicalData.sex)}
                           </span>
                         </div>
                         <div className="flex justify-between border-b pb-2">
                           <span className="font-medium">País:</span>
-                          <span>{userMedicalData.country}</span>
+                          <span>{medicalData.country}</span>
                         </div>
                         <div className="flex justify-between border-b pb-2">
                           <span className="font-medium">Ciudad:</span>
-                          <span>{userMedicalData.city}</span>
+                          <span>{medicalData.city}</span>
                         </div>
                       </div>
                       <div className="space-y-2">
                         <div className="flex justify-between border-b pb-2">
                           <span className="font-medium">Dirección:</span>
-                          <span>{userMedicalData.address}</span>
+                          <span>{medicalData.address}</span>
                         </div>
                         <div className="flex justify-between border-b pb-2">
                           <span className="font-medium">Teléfono:</span>
-                          <span>{userMedicalData.phone}</span>
+                          <span>{medicalData.phone}</span>
                         </div>
                         <div className="flex justify-between border-b pb-2">
                           <span className="font-medium">
                             Contacto de Emergencia:
                           </span>
-                          <span>{userMedicalData.emergencyContactName}</span>
+                          <span>{medicalData.emergencyContactName}</span>
                         </div>
                         <div className="flex justify-between border-b pb-2">
                           <span className="font-medium">
                             Teléfono de Emergencia:
                           </span>
-                          <span>{userMedicalData.emergencyContactPhone}</span>
+                          <span>{medicalData.emergencyContactPhone}</span>
                         </div>
                       </div>
                     </div>
@@ -195,8 +205,8 @@ function ManageUserData() {
             {/* Alergias */}
             <TabsContent value="allergies">
               <AllergiesPage
-                patientDataPk={userMedicalData?.pk}
-                allergiesData={userMedicalData?.allergies}
+                patientDataPk={medicalData?.pk}
+                allergiesData={medicalData?.allergies}
                 fetchData={fetchData}
               />
             </TabsContent>
@@ -204,8 +214,8 @@ function ManageUserData() {
             {/* Citas previas */}
             <TabsContent value="appointments">
               <AppointmentsPage
-                patientDataPk={userMedicalData?.pk}
-                appointmentsData={userMedicalData?.appointments}
+                patientDataPk={medicalData?.pk}
+                appointmentsData={medicalData?.appointments}
                 fetchData={fetchData}
               />
             </TabsContent>
@@ -213,8 +223,8 @@ function ManageUserData() {
             {/* Cirugías */}
             <TabsContent value="surgeries">
               <SurgeriesPage
-                patientDataPk={userMedicalData?.pk}
-                surgeriesData={userMedicalData?.surgeries}
+                patientDataPk={medicalData?.pk}
+                surgeriesData={medicalData?.surgeries}
                 fetchData={fetchData}
               />
             </TabsContent>
@@ -222,8 +232,8 @@ function ManageUserData() {
             {/* Condiciones Crónicas */}
             <TabsContent value="conditions">
               <ChronicConditionsPage
-                patientDataPk={userMedicalData?.pk}
-                chrConditionsData={userMedicalData?.chronicConditions}
+                patientDataPk={medicalData?.pk}
+                chrConditionsData={medicalData?.chronicConditions}
                 fetchData={fetchData}
               />
             </TabsContent>
@@ -231,8 +241,8 @@ function ManageUserData() {
             {/* Medicamentos */}
             <TabsContent value="medications">
               <MedicationsPage
-                patientDataPk={userMedicalData?.pk}
-                medicationsData={userMedicalData?.medications}
+                patientDataPk={medicalData?.pk}
+                medicationsData={medicalData?.medications}
                 fetchData={fetchData}
               />
             </TabsContent>
@@ -240,8 +250,8 @@ function ManageUserData() {
             {/* Vacunas */}
             <TabsContent value="vaccines">
               <VaccinesPage
-                patientDataPk={userMedicalData?.pk}
-                vaccinesData={userMedicalData?.vaccines}
+                patientDataPk={medicalData?.pk}
+                vaccinesData={medicalData?.vaccines}
                 fetchData={fetchData}
               />
             </TabsContent>

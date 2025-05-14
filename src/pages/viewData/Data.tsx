@@ -11,9 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { UserData } from "@/types/dashboard/user";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import type { MedicalData } from "@/types/dashboard/medicalData";
+import {
+  UserBloodTypeOptions,
+  UserSexOptions,
+  type MedicalData,
+} from "@/types/dashboard/medicalData";
 import { getEnumValue, getLocalDateTime } from "@/lib/utils";
-import { UserBloodType, UserSexOptions } from "@/schemas/dashboard/medicalData";
 import { CopyButton } from "@/components/blocks/CopyBtn";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, RefreshCwIcon } from "lucide-react";
@@ -141,7 +144,7 @@ function ViewDataPage() {
                           <span className="font-medium">Tipo de Sangre:</span>
                           <span>
                             {getEnumValue(
-                              UserBloodType,
+                              UserBloodTypeOptions,
                               userMedicalData.bloodType
                             )}
                           </span>
