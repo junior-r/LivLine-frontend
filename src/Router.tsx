@@ -12,7 +12,7 @@ import DashboardPage from "./pages/dashboard";
 import ViewDataPage from "./pages/viewData/Data";
 import SearchMedicalDataPage from "./pages/viewData";
 import ProfilePage from "./pages/user/Profile";
-// import ChangePasswordPage from "./pages/user/ChangePassword";
+import ChangePasswordPage from "./pages/user/ChangePassword";
 
 export const Router = createBrowserRouter([
   {
@@ -77,8 +77,7 @@ export const Router = createBrowserRouter([
           },
           {
             path: "change-password",
-            // element: <ChangePasswordPage />,
-            element: <>Change Password</>,
+            element: <ChangePasswordPage />,
           },
         ],
       },
