@@ -116,23 +116,6 @@ function SearchMedicalDataPage() {
                 {errorStatus.error && (
                   <ErrorForm message={errorStatus.message} />
                 )}
-
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                  <h3 className="text-sm font-medium text-blue-800 mb-2">
-                    Para pruebas, puedes usar:
-                  </h3>
-                  <ul className="space-y-1 text-sm text-gray-600">
-                    <li>
-                      <span className="font-medium">ID:</span> 12345, 67890,
-                      54321
-                    </li>
-                    <li>
-                      <span className="font-medium">Email:</span>{" "}
-                      paciente1@ejemplo.com, paciente2@ejemplo.com,
-                      doctor1@hospital.com
-                    </li>
-                  </ul>
-                </div>
               </form>
             </div>
           </div>

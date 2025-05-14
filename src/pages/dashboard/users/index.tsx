@@ -123,8 +123,10 @@ function UsersDashboard() {
       <Table className="my-4">
         <TableHeader>
           <TableRow>
+            <TableHead></TableHead>
             <TableHead className="w-[100px]">Nombre</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Identificación</TableHead>
             <TableHead>Rol</TableHead>
             <TableHead>Creado</TableHead>
             <TableHead>Actualizado</TableHead>
@@ -135,14 +137,21 @@ function UsersDashboard() {
           {data.length > 0 ? (
             data.map((user) => (
               <TableRow key={user.pk}>
+                <TableCell>
+                  {user.pk === currentUser.pk && (
+                    <Badge variant={"outline"}>Yo</Badge>
+                  )}
+                </TableCell>
                 <TableCell className="font-medium">
                   {user.name} {user.lastName}
                 </TableCell>
                 <TableCell className="flex items-center gap-2">
                   <span>{user.email}</span>
-                  {user.pk === currentUser.pk && (
-                    <Badge variant={"outline"}>Yo</Badge>
-                  )}
+                </TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex flex-col items-start">
+                    <span>{user.idNumber}</span>
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Badge>{getEnumValue(UserRole, user.role)}</Badge>

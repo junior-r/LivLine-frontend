@@ -22,7 +22,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { capitalizeWords } from "@/lib/utils";
-import { UserCreateSchema, UserRole } from "@/schemas/dashboard/user";
+import {
+  UserCreateSchema,
+  UserIdType,
+  UserRole,
+} from "@/schemas/dashboard/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -150,136 +154,6 @@ function CreateUser({ users, setUsers }: Props) {
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="phone">Número de teléfono</FormLabel>
-                    <Input
-                      id="phone"
-                      type="text"
-                      placeholder="+XXXXXXXXXXX"
-                      {...field}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="country">País</FormLabel>
-                    <Input
-                      id="country"
-                      type="text"
-                      placeholder="Colombia"
-                      {...field}
-                      onChange={(e) => {
-                        const formatted = capitalizeWords(e.target.value);
-                        field.onChange(formatted);
-                      }}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="city">Ciudad</FormLabel>
-                    <Input
-                      id="city"
-                      type="text"
-                      placeholder="Bogotá"
-                      {...field}
-                      onChange={(e) => {
-                        const formatted = capitalizeWords(e.target.value);
-                        field.onChange(formatted);
-                      }}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="dateOfBirth"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="dateOfBirth">
-                      Fecha de nacimiento
-                    </FormLabel>
-                    <Input
-                      className="w-full block"
-                      autoComplete="off"
-                      id="dateOfBirth"
-                      type="date"
-                      value={field.value?.toString()}
-                      onChange={field.onChange}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="sex"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel htmlFor="sex">Sexo</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Selecciona un tipo de sangre" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(UserSexOptions).map(([key, label]) => (
-                          <SelectItem value={key} key={key}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="bloodType"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel htmlFor="bloodType">Tipo de sangre</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Selecciona un tipo de sangre" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(UserBloodType).map(([key, label]) => (
-                          <SelectItem value={key} key={key}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
               <FormField
                 control={form.control}
                 name="role"
@@ -310,6 +184,53 @@ function CreateUser({ users, setUsers }: Props) {
                         </>
                       )}
                     </FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="idDocType"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel htmlFor="idDocType">
+                      Documento de identificación
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Selecciona un tipo de identificación" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(UserIdType).map(([key, label]) => (
+                          <SelectItem value={key} key={key}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="idNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="idNumber">
+                      Número de identificación
+                    </FormLabel>
+                    <Input
+                      id="idNumber"
+                      type="text"
+                      placeholder="xxxxxxxx"
+                      {...field}
+                    />
+                    <FormMessage />
                   </FormItem>
                 )}
               />

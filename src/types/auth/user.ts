@@ -6,6 +6,9 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   role: UserRole;
+  idDocType: IdDocType;
+  idNumber: string;
 }
 
 type UserRole = "admin" | "doctor" | "patient";
+type IdDocType = "IdenityCard" | "DNI";

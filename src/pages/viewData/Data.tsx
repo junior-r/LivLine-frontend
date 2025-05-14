@@ -72,7 +72,7 @@ function ViewDataPage() {
           <section>
             <CardTitle className="text-2xl">Expediente Médico</CardTitle>
             <CardDescription>
-              "Información médica completa del paciente"
+              Información médica completa del paciente
               <div>
                 <span>Nombre: </span>
                 <span>
