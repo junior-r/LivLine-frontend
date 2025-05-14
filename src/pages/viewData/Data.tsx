@@ -8,26 +8,23 @@ import {
 } from "@/components/ui/card";
 import { Loader } from "@/components/ui/loader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAuthStore } from "@/store/auth/useAuthStore";
 import type { UserData } from "@/types/dashboard/user";
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
-import CreateUserMedicalData from "./Create";
+import { Link, useParams } from "react-router";
 import type { MedicalData } from "@/types/dashboard/medicalData";
 import { getEnumValue, getLocalDateTime } from "@/lib/utils";
 import { UserBloodType, UserSexOptions } from "@/schemas/dashboard/medicalData";
 import { CopyButton } from "@/components/blocks/CopyBtn";
-import AllergiesPage from "./Allegies";
-import AppointmentsPage from "./Appointments";
-import SurgeriesPage from "./Surgeries";
-import ChronicConditionsPage from "./ChronicConditions";
-import MedicationsPage from "./Medications";
-import VaccinesPage from "./Vaccines";
 import { Button } from "@/components/ui/button";
-import { RefreshCwIcon } from "lucide-react";
+import { ArrowLeftIcon, RefreshCwIcon } from "lucide-react";
+import AllergiesPage from "../dashboard/users/data/Allegies";
+import AppointmentsPage from "../dashboard/users/data/Appointments";
+import SurgeriesPage from "../dashboard/users/data/Surgeries";
+import ChronicConditionsPage from "../dashboard/users/data/ChronicConditions";
+import MedicationsPage from "../dashboard/users/data/Medications";
+import VaccinesPage from "../dashboard/users/data/Vaccines";
 
-function ManageUserData() {
-  const currentUser = useAuthStore((state) => state.user);
+function ViewDataPage() {
   const params = useParams();
   const pk = params.pk as string;
   const [userBaseData, setUserBaseData] = useState<UserData>();
@@ -60,14 +57,22 @@ function ManageUserData() {
 
   return (
     <section className="container mx-auto py-6">
+      <Button
+        variant={"outline"}
+        className="flex items-center gap-2 w-fit mb-4"
+        asChild
+      >
+        <Link to={"/viewData"}>
+          <ArrowLeftIcon />
+          <span>Volver</span>
+        </Link>
+      </Button>
       <Card className="py-0">
         <CardHeader className="bg-blue-100 py-4 flex justify-between items-start">
           <section>
             <CardTitle className="text-2xl">Expediente Médico</CardTitle>
             <CardDescription>
-              {pk === currentUser?.pk
-                ? "Mi información médica completa"
-                : "Información médica completa del paciente"}
+              "Información médica completa del paciente"
               <div>
                 <span>Nombre: </span>
                 <span>
@@ -114,12 +119,6 @@ function ManageUserData() {
                 <CardHeader>
                   <CardTitle className="flex justify-between gap-4">
                     <span>Datos Generales</span>
-                    {!userMedicalData && (
-                      <CreateUserMedicalData
-                        user={userBaseData}
-                        fetchData={fetchData}
-                      />
-                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -198,6 +197,7 @@ function ManageUserData() {
                 patientDataPk={userMedicalData?.pk}
                 allergiesData={userMedicalData?.allergies}
                 fetchData={fetchData}
+                canExecuteCrud={false}
               />
             </TabsContent>
 
@@ -207,6 +207,7 @@ function ManageUserData() {
                 patientDataPk={userMedicalData?.pk}
                 appointmentsData={userMedicalData?.appointments}
                 fetchData={fetchData}
+                canExecuteCrud={false}
               />
             </TabsContent>
 
@@ -216,6 +217,7 @@ function ManageUserData() {
                 patientDataPk={userMedicalData?.pk}
                 surgeriesData={userMedicalData?.surgeries}
                 fetchData={fetchData}
+                canExecuteCrud={false}
               />
             </TabsContent>
 
@@ -225,6 +227,7 @@ function ManageUserData() {
                 patientDataPk={userMedicalData?.pk}
                 chrConditionsData={userMedicalData?.chronicConditions}
                 fetchData={fetchData}
+                canExecuteCrud={false}
               />
             </TabsContent>
 
@@ -234,6 +237,7 @@ function ManageUserData() {
                 patientDataPk={userMedicalData?.pk}
                 medicationsData={userMedicalData?.medications}
                 fetchData={fetchData}
+                canExecuteCrud={false}
               />
             </TabsContent>
 
@@ -243,6 +247,7 @@ function ManageUserData() {
                 patientDataPk={userMedicalData?.pk}
                 vaccinesData={userMedicalData?.vaccines}
                 fetchData={fetchData}
+                canExecuteCrud={false}
               />
             </TabsContent>
           </Tabs>
@@ -252,4 +257,4 @@ function ManageUserData() {
   );
 }
 
-export default ManageUserData;
+export default ViewDataPage;

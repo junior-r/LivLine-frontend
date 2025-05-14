@@ -17,27 +17,35 @@ type Props = {
   patientDataPk: string | undefined;
   surgeriesData: Surgery[] | undefined;
   fetchData: () => void;
+  canExecuteCrud?: boolean;
 };
 
-function SurgeriesPage({ patientDataPk, surgeriesData, fetchData }: Props) {
+function SurgeriesPage({
+  patientDataPk,
+  surgeriesData,
+  fetchData,
+  canExecuteCrud = true,
+}: Props) {
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between gap-4">
           <span>Cirugías</span>
 
-          {patientDataPk ? (
+          {patientDataPk && canExecuteCrud ? (
             <CreateSurgery
               patientDataPk={patientDataPk}
               fetchData={fetchData}
             />
           ) : (
-            <>
-              <p>
-                Para crear primero registra{" "}
-                <span className="underline">Información General</span>
-              </p>
-            </>
+            canExecuteCrud && (
+              <>
+                <p>
+                  Para crear primero registra{" "}
+                  <span className="underline">Información General</span>
+                </p>
+              </>
+            )
           )}
         </CardTitle>
       </CardHeader>
@@ -63,10 +71,12 @@ function SurgeriesPage({ patientDataPk, surgeriesData, fetchData }: Props) {
                     <p>{surgery.notes}</p>
                   </TableCell>
                   <TableCell>
-                    <DeleteDialog
-                      action={() => destroy(surgery.pk)}
-                      callback={fetchData}
-                    />
+                    {canExecuteCrud && (
+                      <DeleteDialog
+                        action={() => destroy(surgery.pk)}
+                        callback={fetchData}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))

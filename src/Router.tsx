@@ -9,6 +9,8 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import UsersDashboard from "./pages/dashboard/users";
 import ManageUserData from "./pages/dashboard/users/data";
 import DashboardPage from "./pages/dashboard";
+import ViewDataPage from "./pages/viewData/Data";
+import SearchMedicalDataPage from "./pages/viewData";
 
 export const Router = createBrowserRouter([
   {
@@ -35,6 +37,19 @@ export const Router = createBrowserRouter([
       {
         path: "/terms-and-conditions",
         element: <div>Terms and Conditions</div>,
+      },
+      {
+        path: "/viewData",
+        children: [
+          {
+            index: true,
+            element: <SearchMedicalDataPage />,
+          },
+          {
+            path: ":pk",
+            element: <ViewDataPage />,
+          },
+        ],
       },
       {
         path: "/auth",

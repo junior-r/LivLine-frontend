@@ -17,27 +17,35 @@ type Props = {
   patientDataPk: string | undefined;
   vaccinesData: Vaccine[] | undefined;
   fetchData: () => void;
+  canExecuteCrud?: boolean;
 };
 
-function VaccinesPage({ patientDataPk, vaccinesData, fetchData }: Props) {
+function VaccinesPage({
+  patientDataPk,
+  vaccinesData,
+  fetchData,
+  canExecuteCrud = true,
+}: Props) {
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between gap-4">
           <span>Vacunas</span>
 
-          {patientDataPk ? (
+          {patientDataPk && canExecuteCrud ? (
             <CreateVaccine
               patientDataPk={patientDataPk}
               fetchData={fetchData}
             />
           ) : (
-            <>
-              <p>
-                Para crear primero registra{" "}
-                <span className="underline">Información General</span>
-              </p>
-            </>
+            canExecuteCrud && (
+              <>
+                <p>
+                  Para crear primero registra{" "}
+                  <span className="underline">Información General</span>
+                </p>
+              </>
+            )
           )}
         </CardTitle>
       </CardHeader>
@@ -66,10 +74,12 @@ function VaccinesPage({ patientDataPk, vaccinesData, fetchData }: Props) {
                     <p>{vaccine.notes}</p>
                   </TableCell>
                   <TableCell>
-                    <DeleteDialog
-                      action={() => destroy(vaccine.pk)}
-                      callback={fetchData}
-                    />
+                    {canExecuteCrud && (
+                      <DeleteDialog
+                        action={() => destroy(vaccine.pk)}
+                        callback={fetchData}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))

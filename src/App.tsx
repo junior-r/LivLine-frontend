@@ -80,7 +80,7 @@ function App() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button className="bg-blue-600 hover:bg-blue-700" asChild>
-                    <Link to={""}>
+                    <Link to={"/viewData"}>
                       Consultar datos
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -539,7 +539,7 @@ function App() {
                 <h3 className="text-lg font-medium text-blue-700">Servicios</h3>
                 <nav className="flex flex-col space-y-2">
                   <Link
-                    to="#"
+                    to="/viewData"
                     className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
                   >
                     Consulta de Datos

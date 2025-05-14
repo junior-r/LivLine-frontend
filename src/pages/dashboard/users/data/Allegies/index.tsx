@@ -19,9 +19,15 @@ type Props = {
   patientDataPk: string | undefined;
   allergiesData: Allergy[] | undefined;
   fetchData: () => void;
+  canExecuteCrud?: boolean;
 };
 
-function AllergiesPage({ patientDataPk, allergiesData, fetchData }: Props) {
+function AllergiesPage({
+  patientDataPk,
+  allergiesData,
+  fetchData,
+  canExecuteCrud = true,
+}: Props) {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "Leve":
@@ -41,18 +47,20 @@ function AllergiesPage({ patientDataPk, allergiesData, fetchData }: Props) {
         <CardTitle className="flex justify-between gap-4">
           <span>Alergias</span>
 
-          {patientDataPk ? (
+          {canExecuteCrud && patientDataPk ? (
             <CreateAllergy
               patientDataPk={patientDataPk}
               fetchData={fetchData}
             />
           ) : (
-            <>
-              <p>
-                Para crear primero registra{" "}
-                <span className="underline">Información General</span>
-              </p>
-            </>
+            canExecuteCrud && (
+              <>
+                <p>
+                  Para crear primero registra{" "}
+                  <span className="underline">Información General</span>
+                </p>
+              </>
+            )
           )}
         </CardTitle>
       </CardHeader>
@@ -82,10 +90,12 @@ function AllergiesPage({ patientDataPk, allergiesData, fetchData }: Props) {
                     <p>{allergy.notes}</p>
                   </TableCell>
                   <TableCell>
-                    <DeleteDialog
-                      action={() => destroy(allergy.pk)}
-                      callback={fetchData}
-                    />
+                    {canExecuteCrud && (
+                      <DeleteDialog
+                        action={() => destroy(allergy.pk)}
+                        callback={fetchData}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))

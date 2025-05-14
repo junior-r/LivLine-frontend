@@ -17,12 +17,14 @@ type Props = {
   patientDataPk: string | undefined;
   chrConditionsData: ChronicCondition[] | undefined;
   fetchData: () => void;
+  canExecuteCrud?: boolean;
 };
 
 function ChronicConditionsPage({
   patientDataPk,
   chrConditionsData,
   fetchData,
+  canExecuteCrud = true,
 }: Props) {
   return (
     <Card>
@@ -30,18 +32,20 @@ function ChronicConditionsPage({
         <CardTitle className="flex justify-between gap-4">
           <span>Condiciones crónicas</span>
 
-          {patientDataPk ? (
+          {patientDataPk && canExecuteCrud ? (
             <CreateCondition
               patientDataPk={patientDataPk}
               fetchData={fetchData}
             />
           ) : (
-            <>
-              <p>
-                Para crear primero registra{" "}
-                <span className="underline">Información General</span>
-              </p>
-            </>
+            canExecuteCrud && (
+              <>
+                <p>
+                  Para crear primero registra{" "}
+                  <span className="underline">Información General</span>
+                </p>
+              </>
+            )
           )}
         </CardTitle>
       </CardHeader>
@@ -70,10 +74,12 @@ function ChronicConditionsPage({
                     <p>{condition.notes}</p>
                   </TableCell>
                   <TableCell>
-                    <DeleteDialog
-                      action={() => destroy(condition.pk)}
-                      callback={fetchData}
-                    />
+                    {canExecuteCrud && (
+                      <DeleteDialog
+                        action={() => destroy(condition.pk)}
+                        callback={fetchData}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))

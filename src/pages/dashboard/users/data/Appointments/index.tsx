@@ -17,12 +17,14 @@ type Props = {
   patientDataPk: string | undefined;
   appointmentsData: Appointment[] | undefined;
   fetchData: () => void;
+  canExecuteCrud?: boolean;
 };
 
 function AppointmentsPage({
   patientDataPk,
   appointmentsData,
   fetchData,
+  canExecuteCrud = true,
 }: Props) {
   return (
     <Card>
@@ -30,18 +32,20 @@ function AppointmentsPage({
         <CardTitle className="flex justify-between gap-4">
           <span>Citas previas</span>
 
-          {patientDataPk ? (
+          {patientDataPk && canExecuteCrud ? (
             <CreateAppointment
               patientDataPk={patientDataPk}
               fetchData={fetchData}
             />
           ) : (
-            <>
-              <p>
-                Para crear primero registra{" "}
-                <span className="underline">Información General</span>
-              </p>
-            </>
+            canExecuteCrud && (
+              <>
+                <p>
+                  Para crear primero registra{" "}
+                  <span className="underline">Información General</span>
+                </p>
+              </>
+            )
           )}
         </CardTitle>
       </CardHeader>
@@ -71,10 +75,12 @@ function AppointmentsPage({
                     <p>{appt.notes}</p>
                   </TableCell>
                   <TableCell>
-                    <DeleteDialog
-                      action={() => destroy(appt.pk)}
-                      callback={fetchData}
-                    />
+                    {canExecuteCrud && (
+                      <DeleteDialog
+                        action={() => destroy(appt.pk)}
+                        callback={fetchData}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))
