@@ -25,3 +25,7 @@ export const UserCreateSchema = z.object({
   idDocType: zEnumFromObject(UserIdType),
   idNumber: z.string().min(3, { message: "Este dato es requerido" }),
 });
+
+export const UserUpdateSchema = UserCreateSchema.partial();
+
+export type UserUpdateFormValues = z.infer<typeof UserUpdateSchema>;

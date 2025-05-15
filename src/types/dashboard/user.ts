@@ -1,10 +1,15 @@
-import type { UserCreateSchema } from "@/schemas/dashboard/user";
+import type {
+  UserCreateSchema,
+  UserUpdateSchema,
+} from "@/schemas/dashboard/user";
 import { z } from "zod";
 
-type BaseUserData = z.infer<typeof UserCreateSchema>;
+export type UserCreateType = z.infer<typeof UserCreateSchema>;
 
-export interface UserData extends BaseUserData {
+export interface UserData extends UserCreateType {
   pk: string;
   createdAt: string;
   updatedAt: string;
 }
+
+export type UserUpdateType = z.infer<typeof UserUpdateSchema>;

@@ -1,4 +1,4 @@
-import { getAll } from "@/actions/dashboard/user";
+import { destroy, getAll } from "@/actions/dashboard/user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,8 @@ import { useDebouncedCallback } from "use-debounce";
 import Pagination from "./Pagination";
 import CreateUser from "./Create";
 import { UserRole } from "@/schemas/dashboard/user";
+import UpdateUser from "./Update";
+import DeleteDialog from "@/components/blocks/DeleteDialog";
 
 function UsersDashboard() {
   const currentUser = useAuthStore((state) => state.user) as User;
@@ -76,6 +78,11 @@ function UsersDashboard() {
   const handleSearchChange = (value: string) => {
     setSearch(value);
     debounced(value);
+  };
+
+  const handleDelete = (userDeletedPk: string) => {
+    const newData = data.filter((user) => user.pk !== userDeletedPk);
+    setData(newData);
   };
 
   if (isLoading) {
@@ -164,14 +171,19 @@ function UsersDashboard() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center gap-2">
-                    <Link
-                      to={`/dashboard/users/${user.pk}`}
-                      title="Datos médicos"
-                    >
-                      <ReceiptTextIcon className="w-5 h-5" />
-                    </Link>
-                    {/* <Update user={user} categories={data} setData={setData} /> */}
-                    {/* <DeleteDialog action={() => destroy(user.id)} callback={fetchData} /> */}
+                    <UpdateUser user={user} users={data} setUsers={setData} />
+                    <Button asChild size={"icon"}>
+                      <Link
+                        to={`/dashboard/users/${user.pk}`}
+                        title="Datos médicos"
+                      >
+                        <ReceiptTextIcon className="w-5 h-5" />
+                      </Link>
+                    </Button>
+                    <DeleteDialog
+                      action={() => destroy(user.pk)}
+                      callback={() => handleDelete(user.pk)}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

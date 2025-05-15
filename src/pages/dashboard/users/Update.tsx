@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/sheet";
 import { capitalizeWords } from "@/lib/utils";
 import {
-  UserCreateSchema,
+  UserUpdateSchema,
   UserIdType,
   UserRole,
 } from "@/schemas/dashboard/user";
@@ -35,47 +35,46 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import type { User } from "@/types/auth/user";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
-import { createUser } from "@/actions/dashboard/user";
-import { PlusIcon } from "lucide-react";
+import { updateUser } from "@/actions/dashboard/user";
+import { EditIcon } from "lucide-react";
 import ErrorForm from "@/components/pages/ErrorForm";
+import { validateUserUpdateData } from "@/utils/dashboard/user";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 
 type Props = {
+  user: User;
   users: User[];
   setUsers: Dispatch<SetStateAction<User[]>>;
 };
 
-function CreateUser({ users, setUsers }: Props) {
+function UpdateUser({ user, users, setUsers }: Props) {
+  const currentUser = useAuthStore((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
   const setError = useResponseStatusStore((state) => state.setError);
 
-  const form = useForm<z.infer<typeof UserCreateSchema>>({
-    resolver: zodResolver(UserCreateSchema),
-    defaultValues: {
-      name: "",
-      lastName: "",
-      email: "",
-      role: "patient",
-      idDocType: undefined,
-      idNumber: undefined,
-    },
+  const form = useForm<z.infer<typeof UserUpdateSchema>>({
+    resolver: zodResolver(UserUpdateSchema),
+    defaultValues: validateUserUpdateData(user),
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof UserCreateSchema>> = async (
+  const onSubmit: SubmitHandler<z.infer<typeof UserUpdateSchema>> = async (
     data
   ) => {
     setIsLoading(true);
     try {
-      const res = await createUser(data);
+      const res = await updateUser(user.pk, data);
       if (res.error) {
         setError(res.error);
       }
 
-      if (res.status === 201) {
-        const { user, message } = res.data;
-        setUsers([user, ...users]);
+      if (res.status === 200) {
+        const { updatedUser, message } = res.data;
+        const newData = users.map((u) => (u.pk === user.pk ? updatedUser : u));
+        setUsers(newData);
         toast.success(message);
+        setIsOpen(false);
       }
     } catch (error) {
       console.error("Register error:", error);
@@ -90,13 +89,26 @@ function CreateUser({ users, setUsers }: Props) {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button className="flex items-center gap-2 bg-yellow-400 text-black hover:text-white">
-          <PlusIcon />
-          <span>Crear</span>
+        <Button
+          className="bg-blue-500 text-black hover:text-white"
+          size={"icon"}
+        >
+          <EditIcon />
         </Button>
       </SheetTrigger>
       <SheetContent className="overflow-auto">
-        <SheetHeader>Crear un nuevo usuario</SheetHeader>
+        <SheetHeader>
+          {user.pk === currentUser?.pk ? (
+            <>Actualizar mi información</>
+          ) : (
+            <>
+              Actualizar información de{" "}
+              <span className="text-blue-500">
+                {user.name} {user.lastName}
+              </span>
+            </>
+          )}
+        </SheetHeader>
         <section className="p-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -248,7 +260,7 @@ function CreateUser({ users, setUsers }: Props) {
                     : "cursor-pointer"
                 }`}
               >
-                {isLoading ? <Loader size="sm" variant="spinner" /> : "Crear"}
+                {isLoading ? <Loader size="sm" variant="spinner" /> : "Guardar"}
               </Button>
             </form>
           </Form>
@@ -258,4 +270,4 @@ function CreateUser({ users, setUsers }: Props) {
   );
 }
 
-export default CreateUser;
+export default UpdateUser;

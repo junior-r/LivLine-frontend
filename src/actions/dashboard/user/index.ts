@@ -1,5 +1,8 @@
 import { apiWithCredentials } from "@/actions/api";
-import type { UserCreateSchema } from "@/schemas/dashboard/user";
+import type {
+  UserCreateSchema,
+  UserUpdateSchema,
+} from "@/schemas/dashboard/user";
 import axios from "axios";
 import type { z } from "zod";
 
@@ -30,6 +33,18 @@ export const getAll = async (params?: { page: number; search: string }) => {
   }
 };
 
+export const getUser = async (userPk: string) => {
+  try {
+    const res = await apiWithCredentials.get(`/dashboard/users/${userPk}`, {});
+    return res;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || { error: "An unknown error occurred" };
+    }
+    return { error: "An unknown error occurred" };
+  }
+};
+
 export const createUser = async (data: z.infer<typeof UserCreateSchema>) => {
   try {
     const res = await apiWithCredentials.post(`/dashboard/users`, data, {});
@@ -42,9 +57,24 @@ export const createUser = async (data: z.infer<typeof UserCreateSchema>) => {
   }
 };
 
-export const getUser = async (userPk: string) => {
+export const updateUser = async (
+  pk: string,
+  data: z.infer<typeof UserUpdateSchema>
+) => {
   try {
-    const res = await apiWithCredentials.get(`/dashboard/users/${userPk}`, {});
+    const res = await apiWithCredentials.patch(`/dashboard/users/${pk}`, data);
+    return res;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || { error: "An unknown error occurred" };
+    }
+    return { error: "An unknown error occurred" };
+  }
+};
+
+export const destroy = async (pk: string) => {
+  try {
+    const res = await apiWithCredentials.delete(`/dashboard/users/${pk}`, {});
     return res;
   } catch (error) {
     if (axios.isAxiosError(error)) {
