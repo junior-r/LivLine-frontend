@@ -7,11 +7,43 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import logo from "@/assets/images/LivLine.svg";
+
+function AuthButtons({ extraClassName }: { extraClassName?: string }) {
+  return (
+    <div className={`flex items-center gap-4 ${extraClassName}`}>
+      <Button asChild variant={"outline"}>
+        <Link
+          viewTransition
+          to="/auth/login"
+          className="text-sm font-medium text-muted-foreground hover:text-primary"
+        >
+          <span style={{ viewTransitionName: "loginTransitionTitle" }}>
+            Ingresar
+          </span>
+          <LogIn />
+        </Link>
+      </Button>
+      <Button asChild variant={"default"}>
+        <Link
+          viewTransition
+          to="/auth/register"
+          className="text-sm font-medium text-muted-foreground hover:text-primary"
+        >
+          <span style={{ viewTransitionName: "registerTransitionTitle" }}>
+            Registrarse
+          </span>
+          <UserRound />
+        </Link>
+      </Button>
+    </div>
+  );
+}
 
 function Navbar() {
   const user = useAuthStore((state) => state.user);
@@ -55,38 +87,9 @@ function Navbar() {
         </nav>
         <div className="flex items-center gap-4">
           {!user ? (
-            <>
-              <Button asChild variant={"outline"}>
-                <Link
-                  viewTransition
-                  to="/auth/login"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary"
-                >
-                  <span style={{ viewTransitionName: "loginTransitionTitle" }}>
-                    Login
-                  </span>
-                  <LogIn />
-                </Link>
-              </Button>
-              <Button asChild variant={"default"}>
-                <Link
-                  viewTransition
-                  to="/auth/register"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary"
-                >
-                  <span
-                    style={{ viewTransitionName: "registerTransitionTitle" }}
-                  >
-                    Register
-                  </span>
-                  <UserRound />
-                </Link>
-              </Button>
-            </>
+            <AuthButtons extraClassName="hidden md:flex" />
           ) : (
-            <>
-              <UserMenu user={user} />
-            </>
+            <UserMenu user={user} />
           )}
           <div className="md:hidden">
             <Sheet>
@@ -113,6 +116,11 @@ function Navbar() {
                     </a>
                   ))}
                 </div>
+                <SheetFooter>
+                  {!user && (
+                    <AuthButtons extraClassName="justify-center flex-1" />
+                  )}
+                </SheetFooter>
               </SheetContent>
             </Sheet>
           </div>
