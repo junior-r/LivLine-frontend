@@ -13,6 +13,9 @@ import ViewDataPage from "./pages/viewData/Data";
 import SearchMedicalDataPage from "./pages/viewData";
 import ProfilePage from "./pages/user/Profile";
 import ChangePasswordPage from "./pages/user/ChangePassword";
+import ForgotPasswordPage from "./pages/auth/ForgotPassword";
+import ResetPasswordValidatePage from "./pages/auth/ResetPasswordValidate";
+import ResetPasswordConfirmPage from "./pages/auth/ResetPasswordConfirm";
 
 export const Router = createBrowserRouter([
   {
@@ -64,6 +67,18 @@ export const Router = createBrowserRouter([
           {
             path: "register",
             element: <Register />,
+          },
+          {
+            path: "forgot-password",
+            element: <ForgotPasswordPage />,
+          },
+          {
+            path: "reset-password-validate",
+            element: <ResetPasswordValidatePage />,
+          },
+          {
+            path: "reset-password-confirm/:code",
+            element: <ResetPasswordConfirmPage />,
           },
         ],
       },

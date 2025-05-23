@@ -1,12 +1,8 @@
-import { LoginSchema } from "@/schemas/auth";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useAuthStore } from "@/store/auth/useAuthStore";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
-import { Link, useNavigate } from "react-router";
-import { login } from "@/actions/auth/login";
 import {
   Form,
   FormField,
@@ -14,12 +10,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import ErrorForm from "@/components/pages/ErrorForm";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import {
   Card,
   CardContent,
@@ -28,36 +24,51 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ResetPasswordConfirmSchema } from "@/schemas/auth";
+import { resetPasswordConfirm } from "@/actions/auth/resetPassword";
+import { useParams } from "react-router";
+import { Checkbox } from "@/components/ui/checkbox";
 import { togglePasswordVisibility } from "@/lib/utils";
 
-function Login() {
+function ResetPasswordConfirmPage() {
+  const params = useParams();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const setUser = useAuthStore((state) => state.setUser);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
   const setError = useResponseStatusStore((state) => state.setError);
-  const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const code = params.code as string;
+
+  useEffect(() => {
+    if (!code || code.length <= 0) {
+      toast.error("Código de restablecimiento de contraseña no encontrado");
+      navigate("/auth/forgot-password/");
+    }
+  }, [navigate, code]);
+
+  const form = useForm<z.infer<typeof ResetPasswordConfirmSchema>>({
+    resolver: zodResolver(ResetPasswordConfirmSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      newPassword: "",
+      newPasswordConfirm: "",
     },
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof LoginSchema>> = async (data) => {
+  const onSubmit: SubmitHandler<
+    z.infer<typeof ResetPasswordConfirmSchema>
+  > = async (data) => {
     setIsLoading(true);
     try {
-      const res = await login(data);
+      const res = await resetPasswordConfirm(code, data);
       if (res.error) {
         setError(res.error);
       }
 
       if (res.status === 200) {
-        const { user, message } = res.data;
+        const { message } = res.data;
         toast.success(message);
-        setUser(user);
-        navigate("/");
+        form.reset();
+        navigate("/auth/login/");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -71,12 +82,10 @@ function Login() {
     <Card className="relative w-full max-w-md">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
-          <span style={{ viewTransitionName: "loginTransitionTitle" }}>
-            Ingresar
-          </span>
+          Restablecer contraseña
         </CardTitle>
         <CardDescription className="text-center">
-          Inicia sesión con tus credenciales para acceder a tu cuenta.
+          Por favor ingresa tu nueva contraseña y confirmala.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -84,14 +93,14 @@ function Login() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="email"
+              name="newPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="email">Correo electrónico</FormLabel>
+                  <FormLabel htmlFor="newPassword">Nueva contraseña</FormLabel>
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="Correo electrónico"
+                    id="newPassword"
+                    type="password"
+                    placeholder="Nueva contraseña"
                     {...field}
                   />
                   <FormMessage />
@@ -100,37 +109,22 @@ function Login() {
             ></FormField>
             <FormField
               control={form.control}
-              name="password"
+              name="newPasswordConfirm"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="password">Contraseña</FormLabel>
+                  <FormLabel htmlFor="newPasswordConfirm">
+                    Nueva contraseña (confirmar)
+                  </FormLabel>
                   <Input
-                    id="password"
+                    id="newPasswordConfirm"
                     type="password"
-                    placeholder="Contraseña"
+                    placeholder="Nueva contraseña (confirmar)"
                     {...field}
                   />
                   <FormMessage />
                 </FormItem>
               )}
             ></FormField>
-
-            <div className="items-top flex space-x-2">
-              <Checkbox
-                id="showPassword"
-                onCheckedChange={(checked) =>
-                  togglePasswordVisibility({ checked, inputIds: ["password"] })
-                }
-              />
-              <div className="grid gap-1.5 leading-none">
-                <label
-                  htmlFor="showPassword"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Mostrar contraseña
-                </label>
-              </div>
-            </div>
 
             <Button
               type="submit"
@@ -141,30 +135,29 @@ function Login() {
                   : "cursor-pointer"
               } w-full`}
             >
-              {isLoading ? <Loader size="sm" variant="spinner" /> : "Ingresar"}
+              {isLoading ? <Loader size="sm" variant="spinner" /> : "Guardar"}
             </Button>
           </form>
         </Form>
-        <div className="py-4">
-          <span className="text-sm text-muted-foreground">
-            ¿No tienes una cuenta?{" "}
-          </span>
-          <Link
-            viewTransition
-            className="text-blue-400"
-            style={{ viewTransitionName: "registerTransitionTitle" }}
-            to={"/auth/register"}
-          >
-            Regístrate aquí
-          </Link>
+        <div className="items-top flex gap-2 pt-6">
+          <Checkbox
+            id="showPassword"
+            onCheckedChange={(checked) =>
+              togglePasswordVisibility({
+                checked,
+                inputIds: ["newPassword", "newPasswordConfirm"],
+              })
+            }
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="showPassword"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Mostrar contraseñas
+            </label>
+          </div>
         </div>
-        <Link
-          viewTransition
-          className="text-blue-400 text-center w-full block"
-          to={"/auth/forgot-password/"}
-        >
-          Olvidé mi contraseña
-        </Link>
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         {errorStatus.error && <ErrorForm message={errorStatus.message} />}
@@ -173,4 +166,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ResetPasswordConfirmPage;

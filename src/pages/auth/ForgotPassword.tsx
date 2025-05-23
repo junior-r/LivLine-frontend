@@ -1,12 +1,8 @@
-import { LoginSchema } from "@/schemas/auth";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useAuthStore } from "@/store/auth/useAuthStore";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
-import { Link, useNavigate } from "react-router";
-import { login } from "@/actions/auth/login";
 import {
   Form,
   FormField,
@@ -14,12 +10,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import ErrorForm from "@/components/pages/ErrorForm";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import {
   Card,
   CardContent,
@@ -28,36 +24,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { togglePasswordVisibility } from "@/lib/utils";
+import { ForgotPasswordSchema } from "@/schemas/auth";
+import { resetPasswordEmail } from "@/actions/auth/resetPassword";
 
-function Login() {
+function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const setUser = useAuthStore((state) => state.setUser);
   const errorStatus = useResponseStatusStore((state) => state.errorStatus);
   const setError = useResponseStatusStore((state) => state.setError);
   const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof ForgotPasswordSchema>>({
+    resolver: zodResolver(ForgotPasswordSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof LoginSchema>> = async (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof ForgotPasswordSchema>> = async (
+    data
+  ) => {
     setIsLoading(true);
     try {
-      const res = await login(data);
+      const res = await resetPasswordEmail(data);
       if (res.error) {
         setError(res.error);
       }
 
       if (res.status === 200) {
-        const { user, message } = res.data;
+        const { message } = res.data;
         toast.success(message);
-        setUser(user);
-        navigate("/");
+        form.reset();
+        navigate("/auth/reset-password-validate/");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -72,11 +69,12 @@ function Login() {
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
           <span style={{ viewTransitionName: "loginTransitionTitle" }}>
-            Ingresar
+            Restablecer contraseña
           </span>
         </CardTitle>
         <CardDescription className="text-center">
-          Inicia sesión con tus credenciales para acceder a tu cuenta.
+          Ingresa tu correo electrónico para recibir un enlace de
+          restablecimiento de contraseña.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -98,39 +96,6 @@ function Login() {
                 </FormItem>
               )}
             ></FormField>
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="password">Contraseña</FormLabel>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Contraseña"
-                    {...field}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-
-            <div className="items-top flex space-x-2">
-              <Checkbox
-                id="showPassword"
-                onCheckedChange={(checked) =>
-                  togglePasswordVisibility({ checked, inputIds: ["password"] })
-                }
-              />
-              <div className="grid gap-1.5 leading-none">
-                <label
-                  htmlFor="showPassword"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Mostrar contraseña
-                </label>
-              </div>
-            </div>
 
             <Button
               type="submit"
@@ -141,30 +106,10 @@ function Login() {
                   : "cursor-pointer"
               } w-full`}
             >
-              {isLoading ? <Loader size="sm" variant="spinner" /> : "Ingresar"}
+              {isLoading ? <Loader size="sm" variant="spinner" /> : "Enviar"}
             </Button>
           </form>
         </Form>
-        <div className="py-4">
-          <span className="text-sm text-muted-foreground">
-            ¿No tienes una cuenta?{" "}
-          </span>
-          <Link
-            viewTransition
-            className="text-blue-400"
-            style={{ viewTransitionName: "registerTransitionTitle" }}
-            to={"/auth/register"}
-          >
-            Regístrate aquí
-          </Link>
-        </div>
-        <Link
-          viewTransition
-          className="text-blue-400 text-center w-full block"
-          to={"/auth/forgot-password/"}
-        >
-          Olvidé mi contraseña
-        </Link>
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         {errorStatus.error && <ErrorForm message={errorStatus.message} />}
@@ -173,4 +118,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ForgotPasswordPage;

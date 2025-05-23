@@ -4,7 +4,7 @@ import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useResponseStatusStore } from "@/store/api/useResponseStatus";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { signUp } from "@/actions/auth/signUp";
 import {
   Form,
@@ -208,7 +208,7 @@ function Register() {
                 isLoading || !form.formState.isValid
                   ? "cursor-not-allowed"
                   : "cursor-pointer"
-              }`}
+              } w-full`}
             >
               {isLoading ? (
                 <Loader size="sm" variant="spinner" />
@@ -218,6 +218,19 @@ function Register() {
             </Button>
           </form>
         </Form>
+        <div className="py-4">
+          <span className="text-sm text-muted-foreground">
+            ¿Ya tienes una cuenta?{" "}
+          </span>
+          <Link
+            viewTransition
+            className="text-blue-400"
+            style={{ viewTransitionName: "loginTransitionTitle" }}
+            to={"/auth/login"}
+          >
+            Ingresa aquí
+          </Link>
+        </div>
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         {errorStatus.error && <ErrorForm message={errorStatus.message} />}
