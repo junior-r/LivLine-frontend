@@ -29,6 +29,7 @@ import VaccinesPage from "./Vaccines";
 import { Button } from "@/components/ui/button";
 import { RefreshCwIcon } from "lucide-react";
 import UpdateMedicalData from "./Update";
+import DataQRCode from "../GenerateQRCode";
 
 function ManageUserData() {
   const currentUser = useAuthStore((state) => state.user);
@@ -256,6 +257,9 @@ function ManageUserData() {
               />
             </TabsContent>
           </Tabs>
+          <div className="my-4">
+            <DataQRCode url={accessUrl} userId={pk} />
+          </div>
         </CardContent>
       </Card>
     </section>
