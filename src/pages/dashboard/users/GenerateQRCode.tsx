@@ -60,16 +60,16 @@ function DataQRCode({ url, userId }: Props) {
         <QRCodeSVG
           id={`qr-${userId}`}
           value={url}
-          size={200}
-          level="H"
+          size={220}
+          level="L"
           marginSize={4}
         />
       ) : (
         <QRCodeCanvas
           id={`qr-${userId}`}
           value={url}
-          size={200}
-          level="H"
+          size={220}
+          level="L"
           marginSize={4}
           ref={canvasRef}
         />
