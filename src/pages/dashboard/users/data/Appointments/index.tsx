@@ -53,7 +53,7 @@ function AppointmentsPage({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Rasón</TableHead>
+              <TableHead>Razón</TableHead>
               <TableHead>Diagnóstico</TableHead>
               <TableHead>Nombre del Doctor</TableHead>
               <TableHead>Fecha</TableHead>

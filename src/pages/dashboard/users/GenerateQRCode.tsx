@@ -55,12 +55,12 @@ function DataQRCode({ url, userId }: Props) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-2">
       {format === "svg" ? (
         <QRCodeSVG
           id={`qr-${userId}`}
           value={url}
-          size={220}
+          size={150}
           level="L"
           marginSize={4}
         />
@@ -68,7 +68,7 @@ function DataQRCode({ url, userId }: Props) {
         <QRCodeCanvas
           id={`qr-${userId}`}
           value={url}
-          size={220}
+          size={150}
           level="L"
           marginSize={4}
           ref={canvasRef}
