@@ -62,6 +62,7 @@ function DataQRCode({ url, userId }: Props) {
           value={url}
           size={150}
           level="L"
+          minVersion={1}
           marginSize={4}
         />
       ) : (
@@ -70,6 +71,7 @@ function DataQRCode({ url, userId }: Props) {
           value={url}
           size={150}
           level="L"
+          minVersion={1}
           marginSize={4}
           ref={canvasRef}
         />
