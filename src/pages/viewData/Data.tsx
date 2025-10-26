@@ -10,7 +10,7 @@ import { Loader } from "@/components/ui/loader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { UserData } from "@/types/dashboard/user";
 import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 import {
   UserBloodTypeOptions,
   UserSexOptions,
@@ -26,6 +26,9 @@ import SurgeriesPage from "../dashboard/users/data/Surgeries";
 import ChronicConditionsPage from "../dashboard/users/data/ChronicConditions";
 import MedicationsPage from "../dashboard/users/data/Medications";
 import VaccinesPage from "../dashboard/users/data/Vaccines";
+import { verifyUserId } from "@/actions/user";
+import { PinVerification } from "./PinVerification";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function ViewDataPage() {
   const params = useParams();
@@ -34,20 +37,41 @@ function ViewDataPage() {
   const [userMedicalData, setUserMedicalData] = useState<MedicalData>();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
+  const [showPinModal, setShowPinModal] = useState(true);
+  const [isPinValidated, setIsPinValidated] = useState(false);
+
+  const navigate = useNavigate();
 
   const fetchData = useCallback(async () => {
+    if (!isPinValidated) return;
     setIsLoading(true);
     const res = await getUser(pk);
     setUserBaseData(res.data.user);
     setUserMedicalData(res.data.medicalData);
     setIsLoading(false);
-  }, [pk]);
+  }, [pk, isPinValidated]);
+
+  const handlePinValidated = async (pin: string) => {
+    const res = await verifyUserId(pk, pin);
+    if (res.error) {
+      return false;
+    }
+
+    setIsPinValidated(true);
+    setShowPinModal(false);
+    return true;
+  };
+
+  const handleCancelPin = () => {
+    setShowPinModal(false);
+    navigate("/viewData");
+  };
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  if (isLoading || !userBaseData) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full w-full gap-2">
         <Loader size="md" />
@@ -57,6 +81,16 @@ function ViewDataPage() {
   }
 
   const accessUrl = import.meta.env.VITE_DOMAIN_URL + "/viewData/" + pk;
+
+  if (showPinModal) {
+    return (
+      <PinVerification
+        isOpen={showPinModal}
+        onCancel={handleCancelPin}
+        onSuccess={handlePinValidated}
+      />
+    );
+  }
 
   return (
     <section className="container mx-auto py-6">
@@ -79,15 +113,21 @@ function ViewDataPage() {
               <div>
                 <span>Nombre: </span>
                 <span>
-                  <strong>
-                    {userBaseData.name} {userBaseData.lastName}
-                  </strong>
+                  {userBaseData ? (
+                    <strong>{`${userBaseData.name} ${userBaseData.lastName}`}</strong>
+                  ) : (
+                    <Skeleton className="w-32 h-5 inline-block" />
+                  )}
                 </span>
               </div>
               <div>
                 <span>Correo electrónico: </span>
                 <span>
-                  <strong>{userBaseData.email}</strong>
+                  {userBaseData ? (
+                    <strong>{userBaseData.email}</strong>
+                  ) : (
+                    <Skeleton className="w-32 h-5 inline-block" />
+                  )}
                 </span>
               </div>
             </CardDescription>

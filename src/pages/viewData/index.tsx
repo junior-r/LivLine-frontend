@@ -25,19 +25,15 @@ function SearchMedicalDataPage() {
 
     setIsLoading(true);
     const res = await getUserByEmailOrPk(searchQuery);
+    setIsLoading(false);
 
-    if (res.error) {
+    if (res.error || !("user" in res.data)) {
       setError("No se encontró ningún usuario con ese ID o email");
-      setIsLoading(false);
       return;
     }
 
-    if ("user" in res.data) {
-      const { pk } = res.data.user;
-      navigate(`/viewData/${pk}`);
-      setIsLoading(false);
-      return;
-    }
+    navigate(`/viewData/${res.data.user.pk}`);
+    return;
   };
 
   if (isLoading) {

@@ -20,9 +20,24 @@ export const updateUser = async (
 
 export const getUserByEmailOrPk = async (query: string) => {
   try {
-    const res = await apiWithOutCredentials.get(
-      `/users/get-user-by-email-or-pk/${query}`,
-      {}
+    const res = await apiWithOutCredentials.post(
+      `/users/get-user-by-email-or-pk/`,
+      { query }
+    );
+    return res;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || { error: "An unknown error occurred" };
+    }
+    return { error: "An unknown error occurred" };
+  }
+};
+
+export const verifyUserId = async (pk: string, idNumber: string) => {
+  try {
+    const res = await apiWithOutCredentials.post(
+      `/users/verify-user-id/${pk}`,
+      { idNumber }
     );
     return res;
   } catch (error) {
