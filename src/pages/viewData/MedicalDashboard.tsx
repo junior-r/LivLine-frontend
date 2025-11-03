@@ -2,17 +2,13 @@ import {
   User,
   AlertCircle,
   Calendar,
-  Activity,
-  Pill,
-  Syringe,
-  ClipboardList,
   MapIcon,
   ArrowLeftIcon,
 } from "lucide-react";
 import InfoCard from "@/components/pages/ViewData/InfoCard";
 import MedicalSection from "@/components/pages/ViewData/MedicalSection";
 import { Link, useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { UserData } from "@/types/dashboard/user";
 import {
   UserBloodTypeOptions,
@@ -30,6 +26,9 @@ import PinSessionTimerDisplay from "@/components/pages/ViewData/PinSessionTimerD
 import MedicalPageHeader from "@/components/pages/ViewData/MedicalPageHeader";
 import { CopyButton } from "@/components/blocks/CopyBtn";
 import { Button } from "@/components/ui/button";
+import LockedSection from "@/components/pages/ViewData/LockedSection";
+import { LockedContentHint } from "@/components/pages/ViewData/LockedContentHint";
+import { getMedicalSections } from "@/components/pages/ViewData/MedicalDashboardConfig";
 
 export default function MedicalDashboard() {
   const params = useParams();
@@ -64,6 +63,34 @@ export default function MedicalDashboard() {
     };
     fetchData();
   }, [pk]);
+
+  const sortedAppointments = useMemo(() => {
+    return (
+      userMedicalData?.appointments?.sort(
+        (a, b) =>
+          new Date(b.appointmentDate).getTime() -
+          new Date(a.appointmentDate).getTime()
+      ) || []
+    );
+  }, [userMedicalData?.appointments]);
+
+  const medicalSections = useMemo(
+    () =>
+      getMedicalSections({
+        isLoading,
+        isPinValidated,
+        userBaseData,
+        userMedicalData,
+        sortedAppointments,
+      }),
+    [
+      isLoading,
+      isPinValidated,
+      userBaseData,
+      userMedicalData,
+      sortedAppointments,
+    ]
+  );
 
   return (
     <div className="min-h-screen">
@@ -220,155 +247,15 @@ export default function MedicalDashboard() {
             )}
           />
 
-          <MedicalSection
-            icon={<Calendar className="w-5 h-5 text-blue-600" />}
-            title="Citas Previas"
-            description="Visitas médicas recientes"
-            bgColor="bg-blue-50"
-            items={
-              userMedicalData?.appointments.sort(
-                (a, b) =>
-                  new Date(b.appointmentDate).getTime() -
-                  new Date(a.appointmentDate).getTime()
-              ) || []
-            }
-            shouldLock={true}
-            isLocked={!isPinValidated}
-            userPk={userBaseData?.pk || ""}
-            isLoading={isLoading}
-            renderItem={(visit) => (
-              <div key={visit.pk}>
-                <div className="flex items-start justify-between mb-1">
-                  <p className="font-semibold text-slate-900">{visit.reason}</p>
-                  <span className="text-xs text-slate-500">
-                    {getLocalDateTime(visit.appointmentDate, ["es-CO"], true)}
-                  </span>
-                </div>
-                <p className="text-sm text-slate-700 mb-1">
-                  {visit.doctorName}
-                </p>
-                <p className="text-sm text-slate-600">{visit.notes}</p>
-              </div>
-            )}
-          />
-
-          <MedicalSection
-            icon={<Activity className="w-5 h-5 text-rose-600" />}
-            title="Cirugías"
-            description="Historial quirúrgico"
-            bgColor="bg-rose-50"
-            items={userMedicalData?.surgeries || []}
-            shouldLock={true}
-            isLocked={!isPinValidated}
-            userPk={userBaseData?.pk || ""}
-            isLoading={isLoading}
-            renderItem={(surgery) => (
-              <div key={surgery.pk}>
-                <div className="flex items-start justify-between mb-1">
-                  <p className="font-semibold text-slate-900">{surgery.name}</p>
-                  <span className="text-xs text-slate-500">
-                    {surgery.date &&
-                      getLocalDateTime(surgery.date, ["es-CO"], true)}
-                  </span>
-                </div>
-                <p className="text-sm text-slate-700">{surgery.notes}</p>
-              </div>
-            )}
-          />
-
-          <MedicalSection
-            icon={<ClipboardList className="w-5 h-5 text-teal-600" />}
-            title="Condiciones Crónicas"
-            description="Condiciones de salud en curso"
-            bgColor="bg-teal-50"
-            items={userMedicalData?.chronicConditions || []}
-            shouldLock={true}
-            isLocked={!isPinValidated}
-            userPk={userBaseData?.pk || ""}
-            isLoading={isLoading}
-            renderItem={(condition) => (
-              <div key={condition.pk}>
-                <div className="flex items-start justify-between mb-1">
-                  <p className="font-semibold text-slate-900">
-                    {condition.name}
-                  </p>
-                </div>
-                <p className="text-sm text-slate-600 mb-1">
-                  Diagnosticado:{" "}
-                  {condition.diagnosisDate &&
-                    getLocalDateTime(condition.diagnosisDate, ["es-CO"], true)}
-                </p>
-                <p className="text-sm text-slate-700">{condition.notes}</p>
-              </div>
-            )}
-          />
-
-          <MedicalSection
-            icon={<Pill className="w-5 h-5 text-cyan-600" />}
-            title="Medicamentos"
-            description="Prescripciones actuales"
-            bgColor="bg-cyan-50"
-            items={userMedicalData?.medications || []}
-            shouldLock={true}
-            isLocked={!isPinValidated}
-            userPk={userBaseData?.pk || ""}
-            isLoading={isLoading}
-            renderItem={(med) => (
-              <div key={med.pk}>
-                <p className="font-semibold text-slate-900 mb-1">{med.name}</p>
-                <p className="text-sm text-slate-700 mb-0.5">
-                  {med.dosage} - {med.frequency}
-                </p>
-                <p className="text-sm text-slate-600">
-                  Desde{" "}
-                  {med.startDate &&
-                    getLocalDateTime(med.startDate, ["es-CO"], true)}{" "}
-                  hasta{" "}
-                  {med.endDate
-                    ? getLocalDateTime(med.endDate, ["es-CO"], true)
-                    : "Presente"}
-                </p>
-                {med.notes && (
-                  <p className="text-sm text-slate-600">Notas: {med.notes}</p>
-                )}
-              </div>
-            )}
-          />
-
-          <MedicalSection
-            icon={<Syringe className="w-5 h-5 text-violet-600" />}
-            title="Vacunas"
-            description="Registros de inmunización"
-            bgColor="bg-violet-50"
-            items={userMedicalData?.vaccines || []}
-            shouldLock={true}
-            isLocked={!isPinValidated}
-            userPk={userBaseData?.pk || ""}
-            isLoading={isLoading}
-            renderItem={(vaccine) => (
-              <div key={vaccine.pk}>
-                <div className="flex items-start justify-between mb-1">
-                  <p className="font-semibold text-slate-900">{vaccine.name}</p>
-                  <span className="text-xs text-slate-500">
-                    {vaccine.vaccinationDate &&
-                      getLocalDateTime(
-                        vaccine.vaccinationDate,
-                        ["es-CO"],
-                        true
-                      )}
-                  </span>
-                </div>
-                <p className="text-sm text-slate-700 mb-0.5">
-                  {vaccine.doseNumber}
-                </p>
-                {vaccine.notes && (
-                  <p className="text-sm text-slate-600">
-                    Notas: {vaccine.notes}
-                  </p>
-                )}
-              </div>
-            )}
-          />
+          {isPinValidated ? (
+            medicalSections
+          ) : (
+            <>
+              <LockedSection pk={userBaseData?.pk || ""} />
+              <LockedContentHint />
+              <LockedContentHint className="hidden lg:block" />
+            </>
+          )}
         </div>
       </main>
     </div>
