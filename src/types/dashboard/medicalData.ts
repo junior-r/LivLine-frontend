@@ -104,3 +104,12 @@ export interface Vaccine {
   createdAt: string;
   patientDataPk?: string;
 }
+
+export interface VerifyPinResponse {
+  error?: string;
+  user?: {
+    pk: string;
+    valid: boolean;
+  };
+  statusCode?: number;
+}
