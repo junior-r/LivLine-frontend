@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/ui/loader";
@@ -11,28 +11,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { verifyUserId } from "@/actions/user";
+import { useValidatePinStore } from "@/store/medicalData/useValidatePinStore";
 
 interface PinVerificationProps {
-  isOpen: boolean;
-  onSuccess: (pin: string) => Promise<boolean>;
-  onCancel: () => void;
+  userPk: string;
 }
 
-export function PinVerification({
-  isOpen,
-  onSuccess,
-  onCancel,
-}: PinVerificationProps) {
+export function PinVerification({ userPk }: PinVerificationProps) {
   const [pin, setPin] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const setPinValidated = useValidatePinStore((state) => state.setPinValidated);
 
-  useEffect(() => {
-    if (isOpen) {
-      setPin("");
-      setError("");
-    }
-  }, [isOpen]);
+  const handleCancelPin = () => {
+    setIsOpen(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,16 +37,33 @@ export function PinVerification({
       return;
     }
 
-    setIsLoading(true);
-    const success = await onSuccess(pin);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const res = await verifyUserId(userPk, pin);
+      if (res.error) {
+        setError(res.error);
+        return;
+      }
 
-    if (!success) setPin("");
+      setPinValidated(true);
+      setIsOpen(false);
+    } catch (_error) {
+      setError("Error al verificar el PIN");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Dialog open={isOpen}>
-      <DialogTrigger></DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          onClick={() => null}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+        >
+          Verificar acceso
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Verificación de Acceso</DialogTitle>
@@ -75,7 +87,7 @@ export function PinVerification({
             <Button
               type="button"
               variant="outline"
-              onClick={onCancel}
+              onClick={handleCancelPin}
               disabled={isLoading}
             >
               Cancelar

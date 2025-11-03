@@ -2,6 +2,7 @@ import axios from "axios";
 import { apiWithCredentials, apiWithOutCredentials } from "../api";
 import { z } from "zod";
 import { ChangePasswordSchema, ProfileSchema } from "@/schemas/user";
+import type { VerifyPinResponse } from "@/types/dashboard/medicalData";
 
 export const updateUser = async (
   pk: string,
@@ -33,13 +34,16 @@ export const getUserByEmailOrPk = async (query: string) => {
   }
 };
 
-export const verifyUserId = async (pk: string, idNumber: string) => {
+export const verifyUserId = async (
+  pk: string,
+  idNumber: string
+): Promise<VerifyPinResponse> => {
   try {
-    const res = await apiWithOutCredentials.post(
+    const { data } = await apiWithOutCredentials.post<VerifyPinResponse>(
       `/users/verify-user-id/${pk}`,
       { idNumber }
     );
-    return res;
+    return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return error.response?.data || { error: "An unknown error occurred" };

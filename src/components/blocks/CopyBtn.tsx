@@ -9,7 +9,7 @@ export function CopyButton({ textToCopy }: { textToCopy: string }) {
     try {
       await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // vuelve al ícono original después de 2s
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Error al copiar:", err);
     }
@@ -21,6 +21,7 @@ export function CopyButton({ textToCopy }: { textToCopy: string }) {
       variant="outline"
       title="Copiar URL de acceso"
       onClick={handleCopy}
+      className="cursor-pointer"
     >
       {copied ? (
         <CopyCheck className="w-4 h-4 text-green-500" />

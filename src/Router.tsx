@@ -9,13 +9,13 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import UsersDashboard from "./pages/dashboard/users";
 import ManageUserData from "./pages/dashboard/users/data";
 import DashboardPage from "./pages/dashboard";
-import ViewDataPage from "./pages/viewData/Data";
 import SearchMedicalDataPage from "./pages/viewData";
 import ProfilePage from "./pages/user/Profile";
 import ChangePasswordPage from "./pages/user/ChangePassword";
 import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import ResetPasswordValidatePage from "./pages/auth/ResetPasswordValidate";
 import ResetPasswordConfirmPage from "./pages/auth/ResetPasswordConfirm";
+import MedicalDashboard from "./pages/viewData/MedicalDashboard";
 
 export const Router = createBrowserRouter([
   {
@@ -52,7 +52,7 @@ export const Router = createBrowserRouter([
           },
           {
             path: ":pk",
-            element: <ViewDataPage />,
+            element: <MedicalDashboard />,
           },
         ],
       },
