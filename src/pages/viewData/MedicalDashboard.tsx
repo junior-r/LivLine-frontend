@@ -7,10 +7,11 @@ import {
   Syringe,
   ClipboardList,
   MapIcon,
+  ArrowLeftIcon,
 } from "lucide-react";
 import InfoCard from "@/components/pages/ViewData/InfoCard";
 import MedicalSection from "@/components/pages/ViewData/MedicalSection";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import type { UserData } from "@/types/dashboard/user";
 import {
@@ -28,6 +29,7 @@ import { useValidatePinStore } from "@/store/medicalData/useValidatePinStore";
 import PinSessionTimerDisplay from "@/components/pages/ViewData/PinSessionTimerDisplay";
 import MedicalPageHeader from "@/components/pages/ViewData/MedicalPageHeader";
 import { CopyButton } from "@/components/blocks/CopyBtn";
+import { Button } from "@/components/ui/button";
 
 export default function MedicalDashboard() {
   const params = useParams();
@@ -68,7 +70,17 @@ export default function MedicalDashboard() {
       <MedicalPageHeader isLoading={isLoading} userBaseData={userBaseData} />
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex justify-end gap-6 flex-wrap mb-6">
+        <div className="flex justify-between gap-6 flex-wrap mb-6">
+          <Button
+            variant={"outline"}
+            className="flex items-center gap-2"
+            size={"icon"}
+            asChild
+          >
+            <Link to={"/viewData"}>
+              <ArrowLeftIcon />
+            </Link>
+          </Button>
           <CopyButton textToCopy={accessUrl} />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
