@@ -46,7 +46,6 @@ export const usePinSessionTimer = () => {
       // If the time reaches 0, clear the interval and reset the store
       if (remaining === 0) {
         clearInterval(timerId);
-        console.log("PIN expired (from hook). Resetting state...");
         setPinValidated(false);
       }
     }, 1000);

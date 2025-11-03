@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export const TTL_IN_MS = 30 * 1000;
+export const TTL_IN_MS = 5 * 60 * 1000; // 5 minutes
 
 type PinState = {
   isPinValidated: boolean;
