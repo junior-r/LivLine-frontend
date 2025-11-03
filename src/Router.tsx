@@ -16,6 +16,14 @@ import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import ResetPasswordValidatePage from "./pages/auth/ResetPasswordValidate";
 import ResetPasswordConfirmPage from "./pages/auth/ResetPasswordConfirm";
 import MedicalDashboard from "./pages/viewData/MedicalDashboard";
+import { CAN_USERS_REGISTER } from "./lib/consts";
+
+const AuthRoutes = [
+  {
+    path: "register",
+    element: <Register />,
+  },
+];
 
 export const Router = createBrowserRouter([
   {
@@ -64,10 +72,7 @@ export const Router = createBrowserRouter([
             path: "login",
             element: <Login />,
           },
-          {
-            path: "register",
-            element: <Register />,
-          },
+          ...(CAN_USERS_REGISTER ? AuthRoutes : []),
           {
             path: "forgot-password",
             element: <ForgotPasswordPage />,

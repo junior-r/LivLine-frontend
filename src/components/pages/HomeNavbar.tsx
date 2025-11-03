@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import logo from "@/assets/images/LivLine.svg";
+import { CAN_USERS_REGISTER } from "@/lib/consts";
 
 function AuthButtons({ extraClassName }: { extraClassName?: string }) {
   return (
@@ -29,18 +30,20 @@ function AuthButtons({ extraClassName }: { extraClassName?: string }) {
           <LogIn />
         </Link>
       </Button>
-      <Button asChild variant={"default"}>
-        <Link
-          viewTransition
-          to="/auth/register"
-          className="text-sm font-medium text-muted-foreground hover:text-primary"
-        >
-          <span style={{ viewTransitionName: "registerTransitionTitle" }}>
-            Registrarse
-          </span>
-          <UserRound />
-        </Link>
-      </Button>
+      {CAN_USERS_REGISTER && (
+        <Button asChild variant={"default"}>
+          <Link
+            viewTransition
+            to="/auth/register"
+            className="text-sm font-medium text-muted-foreground hover:text-primary"
+          >
+            <span style={{ viewTransitionName: "registerTransitionTitle" }}>
+              Registrarse
+            </span>
+            <UserRound />
+          </Link>
+        </Button>
+      )}
     </div>
   );
 }
