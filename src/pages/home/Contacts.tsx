@@ -45,9 +45,7 @@ function ContactsSection() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium">Email</p>
-                  <p className="text-sm text-gray-600">
-                    livlinetulua@gmail.com
-                  </p>
+                  <p className="text-sm text-gray-600">support@livline.org</p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">
