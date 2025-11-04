@@ -1,5 +1,5 @@
 import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import ContactForm from "@/components/pages/Home/ContactForm";
 
 function ContactsSection() {
   return (
@@ -63,6 +63,7 @@ function ContactsSection() {
               </div>
             </div>
           </div>
+
           <div className="flex flex-col space-y-4">
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-blue-700">
@@ -73,66 +74,8 @@ function ContactsSection() {
                 antes posible.
               </p>
             </div>
-            <div className="grid gap-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="name"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Nombre
-                  </label>
-                  <input
-                    id="name"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="Tu nombre"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    htmlFor="email"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="tu@email.com"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label
-                  htmlFor="subject"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Asunto
-                </label>
-                <input
-                  id="subject"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Asunto de tu mensaje"
-                />
-              </div>
-              <div className="space-y-2">
-                <label
-                  htmlFor="message"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Mensaje
-                </label>
-                <textarea
-                  id="message"
-                  className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Tu mensaje"
-                ></textarea>
-              </div>
-              <Button className="bg-blue-600 hover:bg-blue-700 w-full">
-                Enviar Mensaje
-              </Button>
-            </div>
+
+            <ContactForm />
           </div>
         </div>
       </div>
